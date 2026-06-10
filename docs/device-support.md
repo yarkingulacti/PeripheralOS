@@ -124,6 +124,36 @@ Battery: 15%, status=unknown
 
 ---
 
+# LIGHTSPEED Receiver Probe
+
+Temporary receiver support was enabled for `046d:c543`.
+
+Observed interfaces:
+
+```text
+/dev/hidraw3 -> UNIFIED_BATTERY discovery failed
+/dev/hidraw4 -> UNIFIED_BATTERY discovery failed
+/dev/hidraw5 -> UNIFIED_BATTERY feature index: 7
+```
+
+Observed result from `/dev/hidraw5`:
+
+```text
+HID++ device name: PRO 2 LIGHTSPEED
+Battery raw response: 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+Battery raw fields: percentage=15, secondary=15, statusByte=1
+```
+
+Conclusion:
+
+```text
+One LIGHTSPEED receiver hidraw interface can proxy HID++ requests for the paired PRO 2 LIGHTSPEED device.
+Receiver access returns the same UNIFIED_BATTERY response as the direct device interface.
+Receiver access does not resolve charging, discharging, or full battery state mapping.
+```
+
+---
+
 # Notes
 
 Support levels may change between releases.

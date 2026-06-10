@@ -115,6 +115,35 @@ Validation Level:
 * Battery API: Verified
 * Battery Status: Experimental
 
+### UNIFIED_BATTERY Function Probe
+
+Read-only function probe on Logitech PRO 2 LIGHTSPEED:
+
+```text
+fn=0x00 -> 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+fn=0x01 -> 11 01 07 11 3A 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+fn=0x02 -> 11 01 07 21 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+fn=0x03 -> 11 01 FF 07 31 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+```
+
+Observed interpretation:
+
+```text
+fn=0x00 returns battery percentage fields.
+fn=0x01 returns additional unresolved data: 3A 04 00.
+fn=0x02 returns zeroed data.
+fn=0x03 returns a HID++ error response.
+```
+
+Validation status:
+
+```text
+fn=0x00 percentage parsing verified.
+fn=0x01 meaning unresolved.
+fn=0x02 meaning unresolved.
+fn=0x03 unsupported or invalid function.
+```
+
 ---
 
 # SERIAL_NUMBER
