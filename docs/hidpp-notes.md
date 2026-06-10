@@ -90,34 +90,33 @@ Feature Discovery:
 
 Current Findings:
 
-* Battery percentage retrieval verified.
+* Capability discovery and live status parsing are implemented separately.
+* Live status is requested with wire function ID `0x10`.
 * BatteryInfo API implemented.
-* Runtime battery reporting verified.
-* Raw battery status fields exposed through BatteryInfo.
+* Raw battery fields are retained internally and are not exposed through BatteryInfo.
 
 Exposed Fields:
 
 * percentage
 * status
-* rawSecondary
-* rawStatusByte
 
 Unknown Fields:
 
-* Status byte mapping not yet verified.
-* Charging state not yet verified.
-* Discharging state not yet verified.
-* Full battery indication not yet verified.
+* `charging_status=0x04` meaning is conflicting across reference implementations.
+* Reserved and unrecognized charging status values remain unknown.
+* External power status mapping is not exposed.
 
 Validation Level:
 
-* Battery Percentage: Verified
-* Battery API: Verified
-* Battery Status: Experimental
+* Battery Percentage: Verified in one device state from live `fn=0x10`
+* Battery API: Implemented
+* Discharging Status: Verified on Logitech PRO 2 LIGHTSPEED
+* Charging Status (`0x01`): Verified on Logitech PRO 2 LIGHTSPEED
+* Slow Charging (`0x02`) and Full Status (`0x03`): Implemented from established references; hardware validation pending
 
 ### UNIFIED_BATTERY Function Probe
 
-Read-only function probe on Logitech PRO 2 LIGHTSPEED:
+Previously recorded read-only function probe on Logitech PRO 2 LIGHTSPEED:
 
 ```text
 fn=0x00 -> 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -129,8 +128,8 @@ fn=0x03 -> 11 01 FF 07 31 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 Observed interpretation:
 
 ```text
-fn=0x00 returns battery percentage fields.
-fn=0x01 returns additional unresolved data: 3A 04 00.
+fn=0x00 returns capability fields.
+fn=0x01 sends wire function ID 0x10 and returns live battery status fields.
 fn=0x02 returns zeroed data.
 fn=0x03 returns a HID++ error response.
 ```
@@ -138,10 +137,75 @@ fn=0x03 returns a HID++ error response.
 Validation status:
 
 ```text
-fn=0x00 percentage parsing verified.
-fn=0x01 meaning unresolved.
+fn=0x00 capability parsing implemented; hardware revalidation required.
+fn=0x01 live status parsing implemented; hardware revalidation required.
 fn=0x02 meaning unresolved.
 fn=0x03 unsupported or invalid function.
+```
+
+Live status packet fields:
+
+```text
+params[0] = state of charge percentage
+params[1] = level flags
+params[2] = charging status
+params[3] = external power status
+```
+
+Safety decision:
+
+* Percentage is updated only from a successful live `fn=0x10` response.
+* Notifications update internal raw state but do not replace the last live percentage.
+* `charging_status=0x00` maps to `Discharging`; this was validated on an unplugged PRO 2 LIGHTSPEED.
+* `charging_status=0x01` and `0x02` map to `Charging`.
+* `charging_status=0x03` maps to `Full`.
+* `charging_status=0x04` and unrecognized values map to `Unknown`.
+* Slow charging and full mappings require physical-state validation on PRO 2 LIGHTSPEED.
+
+Reference implementations:
+
+* [Linux `hid-logitech-hidpp` driver](https://github.com/torvalds/linux/blob/master/drivers/hid/hid-logitech-hidpp.c), Unified Battery `0x1004`
+* [Solaar Unified Battery decoder](https://github.com/pwr-Solaar/Solaar/blob/master/lib/logitech_receiver/hidpp20.py)
+* [Logitech HID++ 2.0 draft (2012)](https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf), for HID++ framing conventions
+
+### Live Status Validation Record
+
+```text
+Device: Logitech PRO 2 LIGHTSPEED
+Vendor: Logitech
+Vendor ID: 046d
+Product ID: 40a8
+Connection: USB HID interface
+Platform: Linux
+Kernel / OS: Linux 7.0.11-1-cachyos
+Feature: UNIFIED_BATTERY (0x1004), feature index 0x07
+Function: live status, wire fn=0x10
+Observed Packet: 11 01 07 11 3A 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Parsed Output: Battery: 58% (Discharging)
+Validation Status: Verified for percentage and discharging in the current device state
+Notes: Three consecutive reads were consistent and the device was confirmed
+       unplugged/discharging. Slow charging and full,
+       reconnect, and notification behavior remain unverified. No kernel
+       power_supply oracle was available.
+```
+
+### Charging Validation Record
+
+```text
+Device: Logitech PRO 2 LIGHTSPEED
+Vendor: Logitech
+Vendor ID: 046d
+Product ID: 40a8
+Connection: USB HID interface, externally powered
+Platform: Linux
+Kernel / OS: Linux 7.0.11-1-cachyos
+Feature: UNIFIED_BATTERY (0x1004), feature index 0x07
+Function: live status, wire fn=0x10
+Observed Packet: 11 01 07 11 3F 04 01 01 00 00 00 00 00 00 00 00 00 00 00 00
+Parsed Output: Battery: 63% (Charging)
+Validation Status: Verified for charging_status=0x01
+Notes: Device was actively charging. Raw packet was captured through a debugger;
+       no production debug output was added.
 ```
 
 ---
@@ -236,7 +300,7 @@ DEVICE_NAME       -> 3
 UNIFIED_BATTERY   -> 7
 ```
 
-Observed Battery Response:
+Previously Observed Capability Response:
 
 ```text
 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -245,12 +309,12 @@ Observed Battery Response:
 Current Interpretation:
 
 ```text
-response[4] = battery percentage
-response[5] = secondary battery field
-response[6] = status byte
+response[4] = supported level flags
+response[5] = capability flags
+response[6] = trailing capability response data; meaning unverified
 ```
 
-Observed BatteryInfo:
+Previously Observed CLI Output:
 
 ```text
 BatteryInfo API Output:
@@ -260,24 +324,25 @@ Battery: 15%, status=unknown
 
 Notes:
 
-* `statusByte=1` observed while charging.
-* `statusByte=1` observed while discharging.
-* `statusByte=1` cannot currently be used to determine charging state.
-* `response[4]` has been validated as battery percentage.
-* `response[5]` remains an unresolved secondary battery field.
-* `response[6]` remains an unresolved status field.
+* The previous CLI output incorrectly interpreted capability byte `response[4]` as battery percentage.
+* Three consecutive live `fn=0x10` reads contained `charging_status=0x00` while the device was confirmed discharging.
+* Multiple-state, notification, and reconnect validation remain outstanding.
+* Charging status `0x01` is verified on this device.
+* Slow charging `0x02` and full `0x03` are implemented from established references but remain unverified on this device.
+* `charging_status=0x04` and external power mappings remain unresolved.
 
 Current BatteryInfo Model:
 
 ```text
-percentage     -> verified
-status         -> safe fallback (unknown)
-rawSecondary   -> exposed
-rawStatusByte  -> exposed
+percentage     -> live fn=0x10 response only
+status         -> discharging / charging / full / safe fallback (unknown)
+raw fields     -> retained internally
 ```
 
-Charging state mapping is unresolved.
+Charging state mapping is verified for `charging_status=0x01`.
 
-Discharging state mapping is unresolved.
+Slow charging state mapping is implemented for `charging_status=0x02`; hardware validation is pending.
 
-Full battery state mapping is unresolved.
+Discharging state mapping is verified for `charging_status=0x00`.
+
+Full battery state mapping is implemented for `charging_status=0x03`; hardware validation is pending.

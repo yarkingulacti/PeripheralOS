@@ -1,6 +1,6 @@
 #include "peripheralos/logitech/Hidpp20Client.hpp"
+#include "peripheralos/hidpp/UnifiedBatteryReader.hpp"
 #include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
-#include "peripheralos/logitech/HidppBattery.hpp"
 
 #include <chrono>
 #include <thread>
@@ -14,6 +14,12 @@ namespace peripheralos::logitech
         constexpr std::uint8_t SoftwareId = 0x01;
 
         constexpr std::size_t ShortReportSize = 7;
+
+        constexpr std::uint8_t UnifiedBatteryGetCapabilitiesFunction = 0x00;
+        // HID++ 2.0 draft framing uses the high nibble for the function ID.
+        // Hidpp20Client accepts a function number and shifts it into that
+        // nibble, so function number 0x01 sends wire fn=0x10.
+        constexpr std::uint8_t UnifiedBatteryGetStatusFunction = 0x01;
     }
 
     Hidpp20Client::Hidpp20Client(platform::linux::LinuxHidDevice& device)
@@ -27,6 +33,9 @@ namespace peripheralos::logitech
         const std::vector<std::uint8_t>& params
     )
     {
+        const auto functionAndSoftwareId =
+            static_cast<std::uint8_t>((functionId << 4) | SoftwareId);
+
         // Drain old input reports
         while (true)
         {
@@ -42,7 +51,7 @@ namespace peripheralos::logitech
         packet[0] = ShortReportId; // 0x10
         packet[1] = DeviceIndex; // 0x01
         packet[2] = featureIndex;
-        packet[3] = static_cast<std::uint8_t>((functionId << 4) | SoftwareId);
+        packet[3] = functionAndSoftwareId;
 
         for (std::size_t i = 0; i < params.size() && i < 3; ++i)
         {
@@ -80,11 +89,24 @@ namespace peripheralos::logitech
             // HID++ error response.
             if (response.size() > 2 && response[2] == 0xff)
             {
-                return response;
+                if (response.size() > 4 &&
+                    response[3] == featureIndex &&
+                    response[4] == functionAndSoftwareId)
+                {
+                    return response;
+                }
+
+                continue;
             }
 
             // Must match requested feature index.
             if (response.size() > 2 && response[2] != featureIndex)
+            {
+                continue;
+            }
+
+            // Ignore notifications or unrelated responses for the same feature.
+            if (response.size() <= 3 || response[3] != functionAndSoftwareId)
             {
                 continue;
             }
@@ -219,25 +241,31 @@ namespace peripheralos::logitech
             return std::nullopt;
         }
 
-        const auto response = request(
+        hidpp::UnifiedBatteryReader batteryReader(*featureIndex);
+
+        const auto capabilitiesResponse = request(
             *featureIndex,
-            0x00,
+            UnifiedBatteryGetCapabilitiesFunction,
             {0x00, 0x00, 0x00}
         );
 
-        const auto parsedBattery = parseUnifiedBatteryResponse(response);
-
-        if (!parsedBattery.has_value())
+        if (!batteryReader.updateCapabilities(capabilitiesResponse))
         {
             return std::nullopt;
         }
 
-        return BatteryInfo{
-            .percentage = parsedBattery->percentage,
-            .status = mapUnifiedBatteryStatus(parsedBattery->statusByte),
-            .rawLevel = parsedBattery->level,
-            .rawStatusByte = parsedBattery->statusByte
-        };
+        const auto statusResponse = request(
+            *featureIndex,
+            UnifiedBatteryGetStatusFunction,
+            {0x00, 0x00, 0x00}
+        );
+
+        if (!batteryReader.updateStatus(statusResponse))
+        {
+            return std::nullopt;
+        }
+
+        return batteryReader.getBatteryInfo();
     }
 
     std::vector<std::uint16_t> Hidpp20Client::enumerateFeatures()

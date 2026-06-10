@@ -13,9 +13,26 @@ The format is based on Keep a Changelog and Semantic Versioning.
 #### Logitech HID++
 
 * Added HID++ UNIFIED_BATTERY feature discovery.
-* Added battery percentage reading.
 * Added BatteryInfo API exposure.
-* Added battery response parsing for Logitech PRO 2 LIGHTSPEED.
+* Added separate UNIFIED_BATTERY capability, live status, and notification parsing.
+* Added hardware-validated discharging detection for UNIFIED_BATTERY `charging_status=0x00`.
+* Added hardware-validated charging detection for `charging_status=0x01`.
+* Added reference-backed slow charging detection for `charging_status=0x02`.
+* Added reference-backed full detection for `charging_status=0x03`.
+
+### Changed
+
+* Battery percentage is now accepted only from the UNIFIED_BATTERY live status function.
+* Raw HID++ battery fields are retained internally instead of exposed through BatteryInfo.
+
+### Fixed
+
+* Stopped interpreting UNIFIED_BATTERY capability bytes as battery percentage and status.
+* Matched HID++ replies by exact feature, function, and software ID to avoid accepting notifications as request responses.
+
+### Tests
+
+* Added focused UNIFIED_BATTERY parser validation tests.
 
 #### Documentation
 
@@ -44,9 +61,8 @@ The format is based on Keep a Changelog and Semantic Versioning.
 
 ### Known Limitations
 
-* Charging state detection is unresolved.
-* Battery status mapping is unresolved.
-* `statusByte=1` was observed both while charging and discharging.
+* Slow charging and full status mappings require hardware validation on Logitech PRO 2 LIGHTSPEED.
+* Conflicting `charging_status=0x04` and unrecognized values remain unknown.
 
 ---
 

@@ -65,8 +65,8 @@ endif ()
 set(PERIPHERALOS_SOURCES
         src/main.cpp
         src/devices/DeviceIdentity.cpp
+        src/hidpp/UnifiedBatteryReader.cpp
         src/logitech/Hidpp20Client.cpp
-        src/logitech/HidppBattery.cpp
 )
 
 if (UNIX AND NOT APPLE)
@@ -243,16 +243,23 @@ if (PERIPHERALOS_BUILD_TESTS)
 
     FetchContent_Declare(
             doctest
-            URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.zip
+            URL https://github.com/doctest/doctest/archive/refs/tags/v2.5.2.zip
     )
 
     FetchContent_MakeAvailable(doctest)
 
     add_executable(peripheralos-tests
             tests/main.test.cpp
+            tests/UnifiedBatteryReader.test.cpp
+            src/hidpp/UnifiedBatteryReader.cpp
     )
 
     target_compile_features(peripheralos-tests PRIVATE cxx_std_20)
+
+    target_include_directories(peripheralos-tests
+            PRIVATE
+            "${PROJECT_SOURCE_DIR}/include"
+    )
 
     target_link_libraries(peripheralos-tests
             PRIVATE

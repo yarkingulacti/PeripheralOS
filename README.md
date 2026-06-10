@@ -98,8 +98,7 @@ PeripheralOS is currently in active alpha development.
 * [ ] #4 Firmware Information Reading
 * [ ] #5 Device Serial Number Support
 * [ ] #6 Device Capability Discovery
-* [ ] #3 Battery Charging State Detection
-* [ ] #3 Battery Status Mapping
+* [ ] #3 Battery Charging/Full Hardware Validation
 
 ##### Completed
 
@@ -112,7 +111,7 @@ PeripheralOS is currently in active alpha development.
 * [x] Logitech HID++ UNIFIED_BATTERY Discovery
 * [x] Battery Percentage Reading
 * [x] BatteryInfo API Exposure
-* [x] Runtime Battery Validation (PRO 2 LIGHTSPEED)
+* [x] HID++ Unified Battery Status Mapping
 
 ### Current Target Device
 

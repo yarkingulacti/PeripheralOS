@@ -92,7 +92,7 @@ namespace
             if (batteryInfo.has_value())
             {
                 fmt::print(
-                    "  -> Battery: {}%, status={}\n",
+                    "  -> Battery: {}% ({})\n",
                     batteryInfo->percentage,
                     peripheralos::toString(batteryInfo->status)
                 );

@@ -107,19 +107,23 @@ Current capabilities:
 * Device identification
 * DEVICE_NAME support
 * UNIFIED_BATTERY feature discovery
-* Battery percentage reading
+* Separate UNIFIED_BATTERY capability and live status parsing
 * BatteryInfo API
 
 Known limitations:
 
-* Charging state detection unavailable
-* Battery status mapping unavailable
+* Battery percentage is verified in one device state from live `fn=0x10`
+* Discharging status is verified for `charging_status=0x00`
+* Charging status is verified for `charging_status=0x01`
+* Slow charging and full status mappings are implemented but require hardware validation
+* Conflicting or unrecognized status values remain unknown
 
-Observed results:
+Observed live status output:
 
 ```text
 UNIFIED_BATTERY feature index: 7
-Battery: 15%, status=unknown
+Battery: 58% (Discharging)
+Battery: 63% (Charging)
 ```
 
 ---
@@ -140,15 +144,14 @@ Observed result from `/dev/hidraw5`:
 
 ```text
 HID++ device name: PRO 2 LIGHTSPEED
-Battery raw response: 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-Battery raw fields: percentage=15, secondary=15, statusByte=1
+UNIFIED_BATTERY capability response: 11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
 ```
 
 Conclusion:
 
 ```text
 One LIGHTSPEED receiver hidraw interface can proxy HID++ requests for the paired PRO 2 LIGHTSPEED device.
-Receiver access returns the same UNIFIED_BATTERY response as the direct device interface.
+Receiver access returns the same UNIFIED_BATTERY capability response as the direct device interface.
 Receiver access does not resolve charging, discharging, or full battery state mapping.
 ```
 

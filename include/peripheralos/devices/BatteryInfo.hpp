@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <string>
 
 namespace peripheralos
@@ -17,9 +16,6 @@ namespace peripheralos
     {
         int percentage = -1;
         BatteryStatus status = BatteryStatus::Unknown;
-
-        std::uint8_t rawLevel = 0;
-        std::uint8_t rawStatusByte = 0;
     };
 
     inline std::string toString(const BatteryStatus status)
@@ -27,19 +23,14 @@ namespace peripheralos
         switch (status)
         {
         case BatteryStatus::Recharging:
-            return "recharging";
+            return "Charging";
         case BatteryStatus::Full:
-            return "full";
+            return "Full";
         case BatteryStatus::Discharging:
-            return "discharging";
+            return "Discharging";
         case BatteryStatus::Unknown:
         default:
-            return "unknown";
+            return "Unknown";
         }
-    }
-
-    inline BatteryStatus mapUnifiedBatteryStatus(const std::uint8_t /* statusByte */)
-    {
-        return BatteryStatus::Unknown;
     }
 }
