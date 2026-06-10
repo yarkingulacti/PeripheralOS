@@ -2,25 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on Keep a Changelog and this project follows Semantic Versioning.
-
----
-
 ## [Unreleased]
 
 ### Planned
 
-* Battery information
-* Firmware information
-* DPI reading
-* DPI configuration
-* Polling rate reading
-* Polling rate configuration
-* RGB control
-* Device profiles
-* Macro system
-* Per-game profiles
-* Qt user interface
+#### Battery Support
+
+* Logitech HID++ UNIFIED_BATTERY feature support
+* Battery percentage reading
+* Battery status reading
+* Charging state detection
+
+#### Device Information
+
+* Firmware information reading
+* Serial number reading
+* Capability discovery
+
+#### Internal Improvements
+
+* Device abstraction improvements
+* HID++ feature wrappers
+* Improved runtime diagnostics
 
 ---
 

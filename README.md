@@ -43,32 +43,26 @@ Our goal is to eliminate vendor lock-in and bring feature parity across Linux, W
 
 ## Project Status
 
-PeripheralOS is currently in early alpha development.
+PeripheralOS is currently in active alpha development.
 
-Current release:
+Current milestone:
 
-### v0.1.0-alpha
+### v0.2.0-alpha
 
-Completed:
-
-* [x] Linux HID Discovery
-* [x] Device Identification
-* [x] Linux hidraw Integration
-* [x] Logitech HID++ Transport
-* [x] HID++ Feature Discovery
-* [x] HID++ DEVICE_NAME Feature Support
-* [x] Logitech PRO 2 LIGHTSPEED Detection
-* [x] Logitech PRO 2 LIGHTSPEED Device Name Reading
-* [x] Cross-platform CMake build configuration
-* [x] Linux, Windows and macOS release build pipeline
-
-In progress:
+#### Planned
 
 * [ ] Battery Information
-* [ ] DPI Reading
-* [ ] DPI Configuration
-* [ ] Polling Rate Reading
-* [ ] Polling Rate Configuration
+* [ ] Firmware Information
+* [ ] Device Serial Number
+* [ ] Device Capability Discovery
+
+#### Completed
+
+* [x] Device Discovery
+* [x] Logitech HID++ Integration
+* [x] HID++ Feature Discovery
+* [x] Logitech PRO 2 LIGHTSPEED Detection
+* [x] Logitech HID++ Device Name Reading
 
 Target device:
 
@@ -77,21 +71,6 @@ Target device:
 Development platform:
 
 * CachyOS Linux
-
-Release targets:
-
-* Linux x86_64
-* Windows x86_64
-* macOS arm64
-* macOS x86_64 through GitHub hosted runners when available
-
-Latest successful Linux result:
-
-```text
-046d:40a8 -> Logitech PRO 2 LIGHTSPEED
-HID++ DEVICE_NAME feature index: 3
-HID++ device name length: 16
-HID++ device name: PRO 2 LIGHTSPEED
 
 ---
 
@@ -156,11 +135,11 @@ HID++ device name: PRO 2 LIGHTSPEED
 
 ## Supported Platforms
 
-| Platform | Build Status | Runtime Status |
-|----------|--------------|----------------|
-| Linux    | ✅ Supported | 🚧 Alpha HID backend |
-| Windows  | ✅ Supported | 📋 Backend planned |
-| macOS    | ✅ Supported | 📋 Backend planned |
+| Platform | Build Status | Runtime Status       |
+|----------|--------------|----------------------|
+| Linux    | ✅ Supported  | 🚧 Alpha HID backend |
+| Windows  | ✅ Supported  | 📋 Backend planned   |
+| macOS    | ✅ Supported  | 📋 Backend planned   |
 
 ---
 
