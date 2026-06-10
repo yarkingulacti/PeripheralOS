@@ -1,5 +1,9 @@
 # Release Template
 
+Use this template when preparing a new PeripheralOS release.
+
+---
+
 ## [VERSION] - YYYY-MM-DD
 
 ### 🚀 Added
@@ -26,7 +30,7 @@
 
 #### Vendor
 
-- Device *(support level)*
+- Device Name *(support level)*
 
 ---
 
