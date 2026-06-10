@@ -124,8 +124,9 @@ namespace
                     if (parsedBattery.has_value())
                     {
                         fmt::print(
-                            "  -> Parsed Battery: {}%, statusByte={}\n",
+                            "  -> Parsed Battery: {}%, status={}, statusByte={}\n",
                             parsedBattery->percentage,
+                            peripheralos::logitech::toString(parsedBattery->status),
                             parsedBattery->statusByte
                         );
                     }
