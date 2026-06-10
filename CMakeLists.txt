@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(
         PeripheralOS
-        VERSION 0.1.0
+        VERSION 0.2.0
         DESCRIPTION "Cross-platform peripheral management platform"
         HOMEPAGE_URL "https://github.com/yarkingulacti/peripheralos"
         LANGUAGES CXX
@@ -66,6 +66,7 @@ set(PERIPHERALOS_SOURCES
         src/main.cpp
         src/devices/DeviceIdentity.cpp
         src/logitech/Hidpp20Client.cpp
+        src/logitech/HidppBattery.cpp
 )
 
 if (UNIX AND NOT APPLE)

@@ -7,6 +7,7 @@
 #include "peripheralos/devices/DeviceIdentity.hpp"
 #include "peripheralos/logitech/Hidpp20Client.hpp"
 #include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
+#include "peripheralos/logitech/HidppBattery.hpp"
 #include "peripheralos/platform/linux/LinuxHidDevice.hpp"
 #include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
 #endif
@@ -114,6 +115,20 @@ namespace
                     }
 
                     fmt::print("\n");
+
+                    const auto parsedBattery =
+                        peripheralos::logitech::parseUnifiedBatteryResponse(
+                            batteryResponse
+                        );
+
+                    if (parsedBattery.has_value())
+                    {
+                        fmt::print(
+                            "  -> Parsed Battery: {}%, statusByte={}\n",
+                            parsedBattery->percentage,
+                            parsedBattery->statusByte
+                        );
+                    }
                 }
                 else
                 {
