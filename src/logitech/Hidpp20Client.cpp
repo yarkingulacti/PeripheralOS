@@ -234,7 +234,9 @@ namespace peripheralos::logitech
 
         return BatteryInfo{
             .percentage = parsedBattery->percentage,
-            .status = BatteryStatus::Unknown
+            .status = BatteryStatus::Unknown,
+            .rawSecondary = parsedBattery->secondary,
+            .rawStatusByte = parsedBattery->statusByte
         };
     }
 }

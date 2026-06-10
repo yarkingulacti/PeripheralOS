@@ -11,16 +11,14 @@ namespace peripheralos::logitech
             return std::nullopt;
         }
 
-        const auto percentage = response[4];
-
-        if (percentage > 100)
+        if (response[2] == 0xff)
         {
             return std::nullopt;
         }
 
         return HidppBatteryData{
-            .percentage = response[4],
-            .secondaryLevel = response[5],
+            .percentage = static_cast<int>(response[4]),
+            .secondary = response[5],
             .statusByte = response[6]
         };
     }

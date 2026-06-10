@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace peripheralos
@@ -16,9 +17,12 @@ namespace peripheralos
     {
         int percentage = -1;
         BatteryStatus status = BatteryStatus::Unknown;
+
+        std::uint8_t rawSecondary = 0;
+        std::uint8_t rawStatusByte = 0;
     };
 
-    inline std::string toString(BatteryStatus status)
+    inline std::string toString(const BatteryStatus status)
     {
         switch (status)
         {
@@ -33,4 +37,4 @@ namespace peripheralos
             return "unknown";
         }
     }
-} // namespace peripheralos
+}

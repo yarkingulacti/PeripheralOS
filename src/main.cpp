@@ -154,7 +154,7 @@ namespace
                         fmt::print(
                             "  -> Battery raw fields: percentage={}, secondary={}, statusByte={}\n",
                             parsedBattery->percentage,
-                            parsedBattery->secondaryLevel,
+                            parsedBattery->secondary,
                             parsedBattery->statusByte
                         );
                     }

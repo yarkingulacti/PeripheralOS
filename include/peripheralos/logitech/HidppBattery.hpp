@@ -8,9 +8,9 @@ namespace peripheralos::logitech
 {
     struct HidppBatteryData
     {
-        std::uint8_t percentage{};
-        std::uint8_t secondaryLevel{};
-        std::uint8_t statusByte{};
+        int percentage = -1;
+        std::uint8_t secondary = 0;
+        std::uint8_t statusByte = 0;
     };
 
     std::optional<HidppBatteryData> parseUnifiedBatteryResponse(
