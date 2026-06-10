@@ -27,6 +27,34 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.1.1-alpha] - 2026-06-10
+
+### Added
+
+- Added SECURITY.md
+- Added CODE_OF_CONDUCT.md
+- Added detailed architecture documentation
+- Added roadmap documentation
+- Added device support documentation
+- Added Logitech HID++ development notes
+- Added coding standards documentation
+- Added release template documentation
+
+### Changed
+
+- Improved release process documentation
+- Improved changelog and release notes standards
+- Improved contributor guidance
+- Improved GitHub Actions compatibility notes
+
+### Notes
+
+This release does not introduce new runtime device functionality.
+
+It improves project documentation, contributor onboarding and release process consistency.
+
+---
+
 ## [0.1.0-alpha] - 2026-06-10
 
 ### Added
