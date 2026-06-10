@@ -75,79 +75,36 @@ Logitech PRO 2 LIGHTSPEED
 
 ---
 
-# UNIFIED_BATTERY
+## UNIFIED_BATTERY (0x1004)
 
-Status:
+Validation Device:
 
-```text
-Partially Implemented (v0.2.0-alpha)
-```
+* Logitech PRO 2 LIGHTSPEED
+* VID: 046d
+* PID: 40a8
 
-Feature ID:
+Feature Discovery:
 
-```text
-0x1004
-```
+* Feature ID: 0x1004
+* Feature Index: 0x07
 
-Observed on:
+Current Findings:
 
-```text
-Logitech PRO 2 LIGHTSPEED
-```
+* Battery percentage retrieval verified.
+* BatteryInfo API implemented.
+* Runtime output reports battery percentage correctly.
 
-Observed feature index:
+Unknown Fields:
 
-```text
-7
-```
+* Status byte mapping not yet verified.
+* Charging state not yet verified.
+* Discharging state not yet verified.
+* Full battery indication not yet verified.
 
-Purpose:
+Validation Level:
 
-Retrieve:
-
-* Battery percentage
-* Charging state
-* Battery status
-
-Current support:
-
-* Feature discovery
-* Battery status request
-* Battery response parsing
-* Battery percentage reading
-* `BatteryInfo` API exposure
-
-Known response:
-
-```text
-11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-```
-
-Current interpretation:
-
-```text
-response[4] = battery percentage
-response[5] = secondary battery level / unknown
-response[6] = status byte / unknown
-```
-
-Observed result:
-
-```text
-Battery: 15%, status=unknown
-```
-
-Known limitations:
-
-* Charging state is not resolved yet.
-* Battery status enum mapping is not resolved yet.
-* `statusByte=1` was observed both while charging and discharging, so it must not be mapped to `Recharging`.
-
-Planned follow-up:
-
-* Investigate additional UNIFIED_BATTERY functions.
-* Confirm charging state mapping.
-* Confirm battery status enum mapping.
+* Battery Percentage: Verified
+* Battery Status: Experimental
 
 ---
 
