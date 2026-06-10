@@ -19,7 +19,7 @@ namespace peripheralos::logitech
         }
 
         return HidppBatteryData{
-            .percentage = percentage,
+            .percentage = response[4],
             .secondaryLevel = response[5],
             .statusByte = response[6]
         };

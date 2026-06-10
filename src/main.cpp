@@ -3,6 +3,10 @@
 #include <exception>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <cstdint>
 
 #if PERIPHERALOS_PLATFORM_LINUX
 #include "peripheralos/devices/DeviceIdentity.hpp"
@@ -24,6 +28,27 @@
 
 namespace
 {
+    std::string toHexString(const std::vector<std::uint8_t>& data)
+    {
+        std::ostringstream output;
+
+        for (std::size_t i = 0; i < data.size(); ++i)
+        {
+            if (i > 0)
+            {
+                output << ' ';
+            }
+
+            output << std::uppercase
+                << std::hex
+                << std::setw(2)
+                << std::setfill('0')
+                << static_cast<int>(data[i]);
+        }
+
+        return output.str();
+    }
+
     void printHeader()
     {
         fmt::print("\n");
@@ -109,6 +134,11 @@ namespace
 
                 if (!batteryResponse.empty())
                 {
+                    fmt::print(
+                        "  -> Battery raw response: {}\n",
+                        toHexString(batteryResponse)
+                    );
+
                     const auto parsedBattery =
                         peripheralos::logitech::parseUnifiedBatteryResponse(
                             batteryResponse
@@ -119,6 +149,13 @@ namespace
                         fmt::print(
                             "  -> Battery: {}%, status=unknown\n",
                             parsedBattery->percentage
+                        );
+
+                        fmt::print(
+                            "  -> Battery raw fields: percentage={}, secondary={}, statusByte={}\n",
+                            parsedBattery->percentage,
+                            parsedBattery->secondaryLevel,
+                            parsedBattery->statusByte
                         );
                     }
                     else
