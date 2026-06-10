@@ -2,10 +2,6 @@
 
 #include <chrono>
 #include <thread>
-#include <poll.h>
-#include <unistd.h>
-#include <chrono>
-#include <thread>
 
 namespace peripheralos::logitech
 {
