@@ -96,11 +96,35 @@ namespace
             if (unifiedBatteryFeatureIndex.has_value())
             {
                 fmt::print("  -> HID++ UNIFIED_BATTERY feature index: {}\n", *unifiedBatteryFeatureIndex);
+
+                const auto batteryResponse =
+                    hidpp.debugRequest(
+                        *unifiedBatteryFeatureIndex,
+                        0x00,
+                        {0x00, 0x00, 0x00}
+                    );
+
+                if (!batteryResponse.empty())
+                {
+                    fmt::print("  -> UNIFIED_BATTERY RAW:");
+
+                    for (const auto byte : batteryResponse)
+                    {
+                        fmt::print(" {:02X}", byte);
+                    }
+
+                    fmt::print("\n");
+                }
+                else
+                {
+                    fmt::print("  -> UNIFIED_BATTERY request failed\n");
+                }
             }
             else
             {
                 fmt::print("  -> HID++ UNIFIED_BATTERY feature discovery failed\n");
             }
+
 
             if (deviceNameFeatureIndex.has_value())
             {

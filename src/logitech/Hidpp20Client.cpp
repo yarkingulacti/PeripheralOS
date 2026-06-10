@@ -199,4 +199,13 @@ namespace peripheralos::logitech
 
         return name;
     }
+
+    std::vector<std::uint8_t> Hidpp20Client::debugRequest(
+        std::uint8_t featureIndex,
+        std::uint8_t functionId,
+        const std::vector<std::uint8_t>& params
+    )
+    {
+        return request(featureIndex, functionId, params);
+    }
 }
