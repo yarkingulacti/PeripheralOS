@@ -92,7 +92,15 @@ Current Findings:
 
 * Battery percentage retrieval verified.
 * BatteryInfo API implemented.
-* Runtime output reports battery percentage correctly.
+* Runtime battery reporting verified.
+* Raw battery status fields exposed through BatteryInfo.
+
+Exposed Fields:
+
+* percentage
+* status
+* rawSecondary
+* rawStatusByte
 
 Unknown Fields:
 
@@ -104,6 +112,7 @@ Unknown Fields:
 Validation Level:
 
 * Battery Percentage: Verified
+* Battery API: Verified
 * Battery Status: Experimental
 
 ---
@@ -224,5 +233,22 @@ Notes:
 
 * `statusByte=1` observed while charging.
 * `statusByte=1` observed while discharging.
-* Charging state mapping is unresolved.
-* Battery status mapping is unresolved.
+* `statusByte=1` cannot currently be used to determine charging state.
+* `response[4]` has been validated as battery percentage.
+* `response[5]` remains an unresolved secondary battery field.
+* `response[6]` remains an unresolved status field.
+
+Current BatteryInfo Model:
+
+```text
+percentage     -> verified
+status         -> safe fallback (unknown)
+rawSecondary   -> exposed
+rawStatusByte  -> exposed
+```
+
+Charging state mapping is unresolved.
+
+Discharging state mapping is unresolved.
+
+Full battery state mapping is unresolved.
