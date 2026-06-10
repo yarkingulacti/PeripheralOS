@@ -10,6 +10,13 @@ The format is based on Keep a Changelog and Semantic Versioning.
 
 ### Added
 
+#### Logitech HID++
+
+* Added UNIFIED_BATTERY feature discovery.
+* Added battery percentage reading.
+* Added BatteryInfo API exposure.
+* Added battery response parsing for Logitech PRO 2 LIGHTSPEED.
+
 #### Documentation
 
 * Added Design Principles documentation
@@ -34,6 +41,14 @@ The format is based on Keep a Changelog and Semantic Versioning.
 * Defined future milestone roadmap
 * Established documentation standards
 * Established development standards
+
+### Known Limitations
+
+#### Battery Support
+
+* Charging state detection is unresolved.
+* Battery status mapping is unresolved.
+* `statusByte=1` was observed both while charging and discharging.
 
 ---
 

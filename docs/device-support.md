@@ -83,19 +83,44 @@ The device is not currently targeted.
 
 # Feature Support Matrix
 
-| Feature               | Status    |
-|-----------------------|-----------|
-| Device Discovery      | Supported |
-| Device Identification | Supported |
-| Device Name Reading   | Supported |
-| Battery Information   | Planned   |
-| Firmware Information  | Planned   |
-| Serial Number         | Planned   |
-| DPI Support           | Planned   |
-| Polling Rate Support  | Planned   |
-| RGB Support           | Planned   |
-| Profile Support       | Planned   |
-| Macro Support         | Planned   |
+| Feature               | Status       |
+|-----------------------|--------------|
+| Device Discovery      | Supported    |
+| Device Identification | Supported    |
+| Device Name Reading   | Supported    |
+| Battery Information   | Experimental |
+| Firmware Information  | Planned      |
+| Serial Number         | Planned      |
+| DPI Support           | Planned      |
+| Polling Rate Support  | Planned      |
+| RGB Support           | Planned      |
+| Profile Support       | Planned      |
+| Macro Support         | Planned      |
+
+---
+
+# Logitech PRO 2 LIGHTSPEED
+
+Current capabilities:
+
+* Device detection
+* Device identification
+* DEVICE_NAME support
+* UNIFIED_BATTERY feature discovery
+* Battery percentage reading
+* BatteryInfo API
+
+Known limitations:
+
+* Charging state detection unavailable
+* Battery status mapping unavailable
+
+Observed results:
+
+```text
+UNIFIED_BATTERY feature index: 7
+Battery: 15%, status=unknown
+```
 
 ---
 

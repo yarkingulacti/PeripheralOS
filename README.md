@@ -95,10 +95,11 @@ PeripheralOS is currently in active alpha development.
 
 ##### Planned
 
-* [ ] Battery Information
 * [ ] Firmware Information
 * [ ] Device Serial Number
 * [ ] Device Capability Discovery
+* [ ] Battery Charging State Detection
+* [ ] Battery Status Mapping
 
 ##### Completed
 
@@ -108,6 +109,9 @@ PeripheralOS is currently in active alpha development.
 * [x] HID++ Feature Discovery
 * [x] Logitech PRO 2 LIGHTSPEED Detection
 * [x] Logitech HID++ Device Name Reading
+* [x] Logitech HID++ UNIFIED_BATTERY Discovery
+* [x] Battery Percentage Reading
+* [x] BatteryInfo API Exposure
 
 ### Current Target Device
 
@@ -249,7 +253,9 @@ cmake --build build
 
 ### v0.2.0-alpha
 
-* Battery Support
+* Battery Percentage Support
+* Battery Charging State Detection
+* Battery Status Mapping
 * Firmware Information
 * Serial Number Support
 * Capability Discovery

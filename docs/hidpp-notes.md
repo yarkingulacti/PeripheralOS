@@ -80,13 +80,25 @@ Logitech PRO 2 LIGHTSPEED
 Status:
 
 ```text
-Feature Discovery Implemented (v0.2.0-alpha)
+Partially Implemented (v0.2.0-alpha)
 ```
 
 Feature ID:
 
 ```text
 0x1004
+```
+
+Observed on:
+
+```text
+Logitech PRO 2 LIGHTSPEED
+```
+
+Observed feature index:
+
+```text
+7
 ```
 
 Purpose:
@@ -97,62 +109,45 @@ Retrieve:
 * Charging state
 * Battery status
 
-Observed Device:
-
-```text
-Logitech PRO 2 LIGHTSPEED
-```
-
-Discovery Result:
-
-```text
-UNIFIED_BATTERY feature index: 7
-```
-
-Current Support:
+Current support:
 
 * Feature discovery
-* Feature index resolution
-
-Planned:
-
+* Battery status request
+* Battery response parsing
 * Battery percentage reading
-* Charging state reading
-* Battery status parsing
-* High-level BatteryInfo API integration
+* `BatteryInfo` API exposure
 
-Potential outputs:
+Known response:
 
 ```text
-85%
-Charging
-Discharging
-Full
-Low
-Critical
+11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
 ```
 
----
-
-# DEVICE_FW_VERSION
-
-Status:
+Current interpretation:
 
 ```text
-Planned (v0.2.0-alpha)
+response[4] = battery percentage
+response[5] = secondary battery level / unknown
+response[6] = status byte / unknown
 ```
 
-Purpose:
-
-Retrieve firmware version information.
-
-Examples:
+Observed result:
 
 ```text
-Firmware Version
-Bootloader Version
-Hardware Version
+Battery: 15%, status=unknown
 ```
+
+Known limitations:
+
+* Charging state is not resolved yet.
+* Battery status enum mapping is not resolved yet.
+* `statusByte=1` was observed both while charging and discharging, so it must not be mapped to `Recharging`.
+
+Planned follow-up:
+
+* Investigate additional UNIFIED_BATTERY functions.
+* Confirm charging state mapping.
+* Confirm battery status enum mapping.
 
 ---
 
@@ -231,24 +226,46 @@ Update this document.
 
 # Known Working Results
 
-Observed on:
+Observed Device:
 
 ```text
 Logitech PRO 2 LIGHTSPEED
-Vendor ID : 046d
-Product ID: 40a8
+VID: 046d
+PID: 40a8
 ```
 
-Feature discovery results:
+Feature Discovery:
 
 ```text
 DEVICE_NAME       -> 3
 UNIFIED_BATTERY   -> 7
 ```
 
-Device information:
+Observed Battery Response:
 
 ```text
-Device Name Length: 16
-Device Name       : PRO 2 LIGHTSPEED
+11 01 07 01 0F 0F 01 00 00 00 00 00 00 00 00 00 00 00 00 00
 ```
+
+Current Interpretation:
+
+```text
+response[4] = battery percentage
+response[5] = secondary battery field
+response[6] = status byte
+```
+
+Observed BatteryInfo:
+
+```text
+BatteryInfo API Output:
+
+Battery: 15%, status=unknown
+```
+
+Notes:
+
+* `statusByte=1` observed while charging.
+* `statusByte=1` observed while discharging.
+* Charging state mapping is unresolved.
+* Battery status mapping is unresolved.
