@@ -9,7 +9,7 @@ namespace peripheralos::logitech
     struct HidppBatteryData
     {
         int percentage = -1;
-        std::uint8_t secondary = 0;
+        std::uint8_t level = 0;
         std::uint8_t statusByte = 0;
     };
 

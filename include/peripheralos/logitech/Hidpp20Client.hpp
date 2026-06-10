@@ -24,6 +24,7 @@ namespace peripheralos::logitech
             const std::vector<std::uint8_t>& params
         );
         std::optional<BatteryInfo> getBatteryInfo();
+        std::vector<std::uint16_t> enumerateFeatures();
 
     private:
         platform::linux::LinuxHidDevice& device_;

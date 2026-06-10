@@ -18,7 +18,7 @@ namespace peripheralos::logitech
 
         return HidppBatteryData{
             .percentage = static_cast<int>(response[4]),
-            .secondary = response[5],
+            .level = response[5],
             .statusByte = response[6]
         };
     }
