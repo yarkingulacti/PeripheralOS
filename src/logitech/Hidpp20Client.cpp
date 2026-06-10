@@ -210,7 +210,7 @@ namespace peripheralos::logitech
         return request(featureIndex, functionId, params);
     }
 
-    std::optional<devices::BatteryInfo> Hidpp20Client::getBatteryInfo()
+    std::optional<BatteryInfo> Hidpp20Client::getBatteryInfo()
     {
         const auto featureIndex = getFeatureIndex(hidpp20::features::UnifiedBattery);
 
@@ -232,9 +232,9 @@ namespace peripheralos::logitech
             return std::nullopt;
         }
 
-        return devices::BatteryInfo{
+        return BatteryInfo{
             .percentage = parsedBattery->percentage,
-            .status = devices::BatteryStatus::Unknown
+            .status = BatteryStatus::Unknown
         };
     }
 }

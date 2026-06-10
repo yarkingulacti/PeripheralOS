@@ -23,7 +23,7 @@ namespace peripheralos::logitech
             std::uint8_t functionId,
             const std::vector<std::uint8_t>& params
         );
-        std::optional<devices::BatteryInfo> getBatteryInfo();
+        std::optional<BatteryInfo> getBatteryInfo();
 
     private:
         platform::linux::LinuxHidDevice& device_;

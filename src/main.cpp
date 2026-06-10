@@ -2,12 +2,14 @@
 
 #include <exception>
 #include <string>
+#include <iostream>
 
 #if PERIPHERALOS_PLATFORM_LINUX
 #include "peripheralos/devices/DeviceIdentity.hpp"
 #include "peripheralos/logitech/Hidpp20Client.hpp"
 #include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
 #include "peripheralos/logitech/HidppBattery.hpp"
+#include "peripheralos/hidpp/UnifiedBatteryParser.hpp"
 #include "peripheralos/platform/linux/LinuxHidDevice.hpp"
 #include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
 #endif
@@ -114,20 +116,14 @@ namespace
 
                     if (parsedBattery.has_value())
                     {
-                        const auto batteryInfo = hidpp.getBatteryInfo();
-
-                        if (batteryInfo.has_value())
-                        {
-                            fmt::print(
-                                "  -> Battery: {}%, status={}\n",
-                                batteryInfo->percentage,
-                                peripheralos::devices::toString(batteryInfo->status)
-                            );
-                        }
-                        else
-                        {
-                            fmt::print("  -> Battery info read failed\n");
-                        }
+                        fmt::print(
+                            "  -> Battery: {}%, status=unknown\n",
+                            parsedBattery->percentage
+                        );
+                    }
+                    else
+                    {
+                        fmt::print("  -> Battery info read failed\n");
                     }
                 }
                 else
