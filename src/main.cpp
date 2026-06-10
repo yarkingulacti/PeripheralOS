@@ -107,7 +107,37 @@ namespace
 
                 if (!batteryResponse.empty())
                 {
-                    fmt::print("  -> UNIFIED_BATTERY RAW:");
+                    for (std::uint8_t functionId = 0x01; functionId <= 0x03; ++functionId)
+                    {
+                        const auto response =
+                            hidpp.debugRequest(
+                                *unifiedBatteryFeatureIndex,
+                                functionId,
+                                {0x00, 0x00, 0x00}
+                            );
+
+                        if (!response.empty())
+                        {
+                            fmt::print(
+                                "  -> UNIFIED_BATTERY function 0x{:02X} RAW:",
+                                functionId
+                            );
+
+                            for (const auto byte : response)
+                            {
+                                fmt::print(" {:02X}", byte);
+                            }
+
+                            fmt::print("\n");
+                        }
+                        else
+                        {
+                            fmt::print(
+                                "  -> UNIFIED_BATTERY function 0x{:02X} failed\n",
+                                functionId
+                            );
+                        }
+                    }
 
                     for (const auto byte : batteryResponse)
                     {
