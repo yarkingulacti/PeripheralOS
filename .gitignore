@@ -19,7 +19,6 @@ build.ninja
 
 # IDE
 .idea/
-.vscode/
 
 # CLion
 cmake-build-debug/
