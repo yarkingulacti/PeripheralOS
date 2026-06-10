@@ -1,5 +1,13 @@
 # PeripheralOS
 
+![Version](https://img.shields.io/badge/version-v0.1.0--alpha-blue)
+![Status](https://img.shields.io/badge/status-early%20development-orange)
+![Linux](https://img.shields.io/badge/Linux-Alpha-success)
+![Windows](https://img.shields.io/badge/Windows-Planned-lightgrey)
+![macOS](https://img.shields.io/badge/macOS-Planned-lightgrey)
+![C++](https://img.shields.io/badge/C%2B%2B-20-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 <div align="center">
 
 ### Open-Source Cross-Platform Peripheral Management Platform

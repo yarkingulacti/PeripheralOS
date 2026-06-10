@@ -39,6 +39,90 @@ option(PERIPHERALOS_ENABLE_RGB "Enable RGB support" ON)
 option(PERIPHERALOS_ENABLE_PROFILES "Enable profile system" ON)
 option(PERIPHERALOS_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
 
+# ============================================================
+# Build Type Values
+# ============================================================
+
+set_property(
+        CACHE CMAKE_BUILD_TYPE
+        PROPERTY STRINGS
+        Debug
+        Release
+        RelWithDebInfo
+        MinSizeRel
+)
+
+# ============================================================
+# Release Optimization / LTO
+# ============================================================
+
+option(PERIPHERALOS_ENABLE_LTO "Enable Link Time Optimization for Release builds" ON)
+
+if (PERIPHERALOS_ENABLE_LTO)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT PERIPHERALOS_IPO_SUPPORTED OUTPUT PERIPHERALOS_IPO_ERROR)
+
+    if (PERIPHERALOS_IPO_SUPPORTED)
+        set_property(
+                TARGET ${PERIPHERALOS_EXECUTABLE_NAME}
+                PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE
+        )
+    else ()
+        message(WARNING "IPO/LTO is not supported: ${PERIPHERALOS_IPO_ERROR}")
+    endif ()
+endif ()
+
+# ============================================================
+# Git Metadata
+# ============================================================
+
+find_package(Git QUIET)
+
+if (GIT_FOUND)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE PERIPHERALOS_GIT_COMMIT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_QUIET
+    )
+else ()
+    set(PERIPHERALOS_GIT_COMMIT "unknown")
+endif ()
+
+target_compile_definitions(${PERIPHERALOS_EXECUTABLE_NAME}
+        PRIVATE
+        PERIPHERALOS_GIT_COMMIT="${PERIPHERALOS_GIT_COMMIT}"
+)
+
+# ============================================================
+# Packaging
+# ============================================================
+
+set(CPACK_PACKAGE_NAME "${PERIPHERALOS_NAME}")
+set(CPACK_PACKAGE_VENDOR "${PERIPHERALOS_VENDOR}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+set(CPACK_PACKAGE_HOMEPAGE_URL "${PROJECT_HOMEPAGE_URL}")
+set(CPACK_PACKAGE_CONTACT "Yarkın Gülaçtı")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+
+if (WIN32)
+    set(CPACK_GENERATOR "ZIP")
+elseif (APPLE)
+    set(CPACK_GENERATOR "TGZ")
+elseif (UNIX)
+    set(CPACK_GENERATOR "TGZ")
+endif ()
+
+include(CPack)
+
+# ============================================================
+# Export compile_commands.json
+# ============================================================
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Future
 option(PERIPHERALOS_BUILD_DAEMON "Build background daemon" OFF)
 option(PERIPHERALOS_BUILD_UI "Build Qt UI" OFF)
