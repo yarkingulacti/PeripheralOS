@@ -80,7 +80,13 @@ Logitech PRO 2 LIGHTSPEED
 Status:
 
 ```text
-Planned (v0.2.0-alpha)
+Feature Discovery Implemented (v0.2.0-alpha)
+```
+
+Feature ID:
+
+```text
+0x1004
 ```
 
 Purpose:
@@ -90,6 +96,30 @@ Retrieve:
 * Battery percentage
 * Charging state
 * Battery status
+
+Observed Device:
+
+```text
+Logitech PRO 2 LIGHTSPEED
+```
+
+Discovery Result:
+
+```text
+UNIFIED_BATTERY feature index: 7
+```
+
+Current Support:
+
+* Feature discovery
+* Feature index resolution
+
+Planned:
+
+* Battery percentage reading
+* Charging state reading
+* Battery status parsing
+* High-level BatteryInfo API integration
 
 Potential outputs:
 
@@ -196,3 +226,29 @@ Planned investigations:
 Whenever a new HID++ feature is implemented:
 
 Update this document.
+
+---
+
+# Known Working Results
+
+Observed on:
+
+```text
+Logitech PRO 2 LIGHTSPEED
+Vendor ID : 046d
+Product ID: 40a8
+```
+
+Feature discovery results:
+
+```text
+DEVICE_NAME       -> 3
+UNIFIED_BATTERY   -> 7
+```
+
+Device information:
+
+```text
+Device Name Length: 16
+Device Name       : PRO 2 LIGHTSPEED
+```

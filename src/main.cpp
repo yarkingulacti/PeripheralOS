@@ -6,6 +6,7 @@
 #if PERIPHERALOS_PLATFORM_LINUX
 #include "peripheralos/devices/DeviceIdentity.hpp"
 #include "peripheralos/logitech/Hidpp20Client.hpp"
+#include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
 #include "peripheralos/platform/linux/LinuxHidDevice.hpp"
 #include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
 #endif
@@ -87,7 +88,19 @@ namespace
 
             peripheralos::logitech::Hidpp20Client hidpp(hidDevice);
 
-            const auto deviceNameFeatureIndex = hidpp.getFeatureIndex(0x0005);
+            const auto deviceNameFeatureIndex =
+                hidpp.getFeatureIndex(peripheralos::logitech::hidpp20::features::DeviceName);
+            const auto unifiedBatteryFeatureIndex =
+                hidpp.getFeatureIndex(peripheralos::logitech::hidpp20::features::UnifiedBattery);
+
+            if (unifiedBatteryFeatureIndex.has_value())
+            {
+                fmt::print("  -> HID++ UNIFIED_BATTERY feature index: {}\n", *unifiedBatteryFeatureIndex);
+            }
+            else
+            {
+                fmt::print("  -> HID++ UNIFIED_BATTERY feature discovery failed\n");
+            }
 
             if (deviceNameFeatureIndex.has_value())
             {

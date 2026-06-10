@@ -1,4 +1,5 @@
 #include "peripheralos/logitech/Hidpp20Client.hpp"
+#include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
 
 #include <chrono>
 #include <thread>
@@ -120,7 +121,7 @@ namespace peripheralos::logitech
 
     std::optional<std::uint8_t> Hidpp20Client::getDeviceNameLength()
     {
-        const auto featureIndex = getFeatureIndex(0x0005);
+        const auto featureIndex = getFeatureIndex(hidpp20::features::DeviceName);
 
         if (!featureIndex.has_value())
         {
@@ -143,7 +144,7 @@ namespace peripheralos::logitech
 
     std::optional<std::string> Hidpp20Client::getDeviceName()
     {
-        const auto featureIndex = getFeatureIndex(0x0005);
+        const auto featureIndex = getFeatureIndex(hidpp20::features::DeviceName);
 
         if (!featureIndex.has_value())
         {
