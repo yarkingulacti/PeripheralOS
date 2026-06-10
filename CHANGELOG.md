@@ -29,10 +29,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.1-alpha] - 2026-06-10
 
-### Added
+### 🚀 Added
 
-- Added SECURITY.md
-- Added CODE_OF_CONDUCT.md
+#### Documentation
+
+- Added `SECURITY.md`
+- Added `CODE_OF_CONDUCT.md`
 - Added detailed architecture documentation
 - Added roadmap documentation
 - Added device support documentation
@@ -40,18 +42,39 @@ All notable changes to this project will be documented in this file.
 - Added coding standards documentation
 - Added release template documentation
 
-### Changed
+#### Project Management
+
+- Added GitHub issue planning for `v0.2.0-alpha`
+- Added milestone planning for future alpha releases
+- Added label strategy for issue management
+
+### 🔧 Changed
+
+#### Release Process
 
 - Improved release process documentation
 - Improved changelog and release notes standards
 - Improved contributor guidance
-- Improved GitHub Actions compatibility notes
+- Improved GitHub Actions compatibility with newer action versions
 
-### Notes
+### 📝 Notes
 
 This release does not introduce new runtime device functionality.
 
-It improves project documentation, contributor onboarding and release process consistency.
+It improves project documentation, contributor onboarding, release process consistency and project planning for future
+PeripheralOS development.
+
+### 🎯 Next Milestone
+
+#### v0.2.0-alpha
+
+Planned objectives:
+
+- Battery information support
+- Firmware information support
+- Device serial number support
+- Device capability discovery
+- Expanded Logitech HID++ coverage
 
 ---
 
