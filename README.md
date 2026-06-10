@@ -43,14 +43,27 @@ Our goal is to eliminate vendor lock-in and bring feature parity across Linux, W
 
 ## Project Status
 
-PeripheralOS is currently in early development.
+PeripheralOS is currently in early alpha development.
 
-Current milestone:
+Current release:
 
-### v0.1.0
+### v0.1.0-alpha
 
-* [ ] Device Discovery
-* [ ] Logitech HID++ Integration
+Completed:
+
+* [x] Linux HID Discovery
+* [x] Device Identification
+* [x] Linux hidraw Integration
+* [x] Logitech HID++ Transport
+* [x] HID++ Feature Discovery
+* [x] HID++ DEVICE_NAME Feature Support
+* [x] Logitech PRO 2 LIGHTSPEED Detection
+* [x] Logitech PRO 2 LIGHTSPEED Device Name Reading
+* [x] Cross-platform CMake build configuration
+* [x] Linux, Windows and macOS release build pipeline
+
+In progress:
+
 * [ ] Battery Information
 * [ ] DPI Reading
 * [ ] DPI Configuration
@@ -64,6 +77,21 @@ Target device:
 Development platform:
 
 * CachyOS Linux
+
+Release targets:
+
+* Linux x86_64
+* Windows x86_64
+* macOS arm64
+* macOS x86_64 through GitHub hosted runners when available
+
+Latest successful Linux result:
+
+```text
+046d:40a8 -> Logitech PRO 2 LIGHTSPEED
+HID++ DEVICE_NAME feature index: 3
+HID++ device name length: 16
+HID++ device name: PRO 2 LIGHTSPEED
 
 ---
 
@@ -128,11 +156,11 @@ Development platform:
 
 ## Supported Platforms
 
-| Platform | Status            |
-|----------|-------------------|
-| Linux    | 🚧 In Development |
-| Windows  | 📋 Planned        |
-| macOS    | 📋 Planned        |
+| Platform | Build Status | Runtime Status |
+|----------|--------------|----------------|
+| Linux    | ✅ Supported | 🚧 Alpha HID backend |
+| Windows  | ✅ Supported | 📋 Backend planned |
+| macOS    | ✅ Supported | 📋 Backend planned |
 
 ---
 

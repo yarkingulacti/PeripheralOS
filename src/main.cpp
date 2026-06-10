@@ -1,24 +1,56 @@
-#include "peripheralos/logitech/Hidpp20Client.hpp"
-#include "peripheralos/platform/linux/LinuxHidDevice.hpp"
-#include "peripheralos/devices/DeviceIdentity.hpp"
-#include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
-
 #include <fmt/core.h>
 
 #include <exception>
-
-int main()
-{
-    try
-    {
-        fmt::print("{} v{}\n", PERIPHERALOS_NAME, PERIPHERALOS_VERSION);
-        fmt::print("Platform: {}\n\n", PERIPHERALOS_PLATFORM);
+#include <string>
 
 #if PERIPHERALOS_PLATFORM_LINUX
+#include "peripheralos/devices/DeviceIdentity.hpp"
+#include "peripheralos/logitech/Hidpp20Client.hpp"
+#include "peripheralos/platform/linux/LinuxHidDevice.hpp"
+#include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
+#endif
+
+#ifndef PERIPHERALOS_VERSION_FULL
+#define PERIPHERALOS_VERSION_FULL PERIPHERALOS_VERSION
+#endif
+
+#ifndef PERIPHERALOS_GIT_COMMIT
+#define PERIPHERALOS_GIT_COMMIT "unknown"
+#endif
+
+namespace
+{
+    void printHeader()
+    {
+        fmt::print("\n");
+        fmt::print("============================================================\n");
+        fmt::print("  {} {}\n", PERIPHERALOS_NAME, PERIPHERALOS_VERSION_FULL);
+        fmt::print("============================================================\n");
+        fmt::print("  Platform : {}\n", PERIPHERALOS_PLATFORM);
+        fmt::print("  Commit   : {}\n", PERIPHERALOS_GIT_COMMIT);
+        fmt::print("  License  : {}\n", PERIPHERALOS_LICENSE);
+        fmt::print("  Author   : {}\n", PERIPHERALOS_AUTHOR);
+        fmt::print("============================================================\n\n");
+    }
+
+    void printFeatureStatus()
+    {
+        fmt::print("Runtime features:\n");
+        fmt::print("  HID support      : {}\n", PERIPHERALOS_ENABLE_HID ? "enabled" : "disabled");
+        fmt::print("  RGB support      : {}\n", PERIPHERALOS_ENABLE_RGB ? "enabled" : "disabled");
+        fmt::print("  Profile support  : {}\n", PERIPHERALOS_ENABLE_PROFILES ? "enabled" : "disabled");
+        fmt::print("\n");
+    }
+
+#if PERIPHERALOS_PLATFORM_LINUX
+
+    void runLinuxHidDiscovery()
+    {
         peripheralos::platform::linux::LinuxHidDiscovery discovery;
         const auto devices = discovery.discover();
 
-        fmt::print("HID devices:\n");
+        fmt::print("Linux HID discovery:\n");
+        fmt::print("  Found {} HID device(s).\n\n", devices.size());
 
         for (const auto& device : devices)
         {
@@ -38,63 +70,95 @@ int main()
                 identity.supported ? "yes" : "no"
             );
 
-            if (identity.supported)
+            if (!identity.supported)
             {
-                peripheralos::platform::linux::LinuxHidDevice hidDevice(device.path);
+                continue;
+            }
 
-                if (hidDevice.open())
-                {
-                    fmt::print("  -> opened successfully\n");
+            peripheralos::platform::linux::LinuxHidDevice hidDevice(device.path);
 
-                    peripheralos::logitech::Hidpp20Client hidpp(hidDevice);
+            if (!hidDevice.open())
+            {
+                fmt::print("  -> failed to open. Check hidraw permissions or try udev rules.\n");
+                continue;
+            }
 
-                    const auto deviceNameFeatureIndex = hidpp.getFeatureIndex(0x0005);
+            fmt::print("  -> opened successfully\n");
 
-                    if (deviceNameFeatureIndex.has_value())
-                    {
-                        fmt::print(
-                            "  -> HID++ DEVICE_NAME feature index: {}\n",
-                            *deviceNameFeatureIndex
-                        );
+            peripheralos::logitech::Hidpp20Client hidpp(hidDevice);
 
-                        const auto hidppNameLength = hidpp.getDeviceNameLength();
+            const auto deviceNameFeatureIndex = hidpp.getFeatureIndex(0x0005);
 
-                        if (hidppNameLength.has_value())
-                        {
-                            fmt::print("  -> HID++ device name length: {}\n", *hidppNameLength);
-                        }
+            if (deviceNameFeatureIndex.has_value())
+            {
+                fmt::print("  -> HID++ DEVICE_NAME feature index: {}\n", *deviceNameFeatureIndex);
+            }
+            else
+            {
+                fmt::print("  -> HID++ DEVICE_NAME feature discovery failed\n");
+            }
 
-                        const auto hidppName = hidpp.getDeviceName();
+            const auto hidppNameLength = hidpp.getDeviceNameLength();
 
-                        if (hidppName.has_value())
-                        {
-                            fmt::print("  -> HID++ device name: {}\n", *hidppName);
-                        }
-                        else
-                        {
-                            fmt::print("  -> HID++ device name read failed\n");
-                        }
-                    }
-                    else
-                    {
-                        fmt::print("  -> HID++ request failed\n");
-                    }
-                }
-                else
-                {
-                    fmt::print("  -> failed to open. Try running with sudo or add udev rule.\n");
-                }
+            if (hidppNameLength.has_value())
+            {
+                fmt::print("  -> HID++ device name length: {}\n", *hidppNameLength);
+            }
+            else
+            {
+                fmt::print("  -> HID++ device name length read failed\n");
+            }
+
+            const auto hidppName = hidpp.getDeviceName();
+
+            if (hidppName.has_value())
+            {
+                fmt::print("  -> HID++ device name: {}\n", *hidppName);
+            }
+            else
+            {
+                fmt::print("  -> HID++ device name read failed\n");
             }
         }
+
+        fmt::print("\n");
+    }
+
 #else
-        fmt::print("HID discovery is not implemented for this platform yet.\n");
+
+    void runUnsupportedPlatformNotice()
+    {
+        fmt::print("PeripheralOS CLI built successfully for this platform.\n\n");
+        fmt::print("Current v0.1.0-alpha runtime support:\n");
+        fmt::print("  Linux HID discovery       : available\n");
+        fmt::print("  Logitech HID++ prototype  : available on Linux\n");
+        fmt::print("  Windows backend           : planned\n");
+        fmt::print("  macOS backend             : planned\n\n");
+        fmt::print("This binary verifies that the cross-platform build pipeline works.\n");
+    }
+
+#endif
+}
+
+int main()
+{
+    try
+    {
+        printHeader();
+        printFeatureStatus();
+
+#if PERIPHERALOS_PLATFORM_LINUX
+        runLinuxHidDiscovery();
+#else
+        runUnsupportedPlatformNotice();
 #endif
 
+        fmt::print("Done.\n");
         return 0;
     }
     catch (const std::exception& error)
     {
-        fmt::print(stderr, "Error: {}\n", error.what());
+        fmt::print(stderr, "Fatal error: {}\n", error.what());
         return 1;
     }
 }

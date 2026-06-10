@@ -1,0 +1,136 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - "v*"
+
+permissions:
+    contents: write
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.meta.outputs.version }}
+            title: ${{ steps.meta.outputs.title }}
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Read release metadata from tag
+                id: meta
+                shell: bash
+                run: |
+                    VERSION="${GITHUB_REF_NAME}"
+                    echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+                    echo "title=PeripheralOS ${VERSION}" >> "$GITHUB_OUTPUT"
+
+    build:
+        needs: prepare
+        name: Build ${{ matrix.name }}
+        runs-on: ${{ matrix.runner }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    -   name: linux-x86_64
+                        runner: ubuntu-latest
+                        executable_path: build/bin/peripheralos
+                        package_ext: tar.gz
+
+                    -   name: windows-x86_64
+                        runner: windows-latest
+                        executable_path: build/bin/peripheralos.exe
+                        package_ext: zip
+
+                    -   name: macos-arm64
+                        runner: macos-latest
+                        executable_path: build/bin/peripheralos
+                        package_ext: tar.gz
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Install Linux dependencies
+                if: runner.os == 'Linux'
+                run: |
+                    sudo apt update
+                    sudo apt install -y build-essential cmake ninja-build pkg-config libudev-dev
+
+            -   name: Configure
+                run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+            -   name: Build
+                run: cmake --build build --config Release
+
+            -   name: Package Linux/macOS
+                if: runner.os != 'Windows'
+                shell: bash
+                run: |
+                    ARTIFACT_NAME="peripheralos-${{ needs.prepare.outputs.version }}-${{ matrix.name }}"
+                    mkdir -p "dist/${ARTIFACT_NAME}"
+                    cp "${{ matrix.executable_path }}" "dist/${ARTIFACT_NAME}/peripheralos"
+                    cp README.md CHANGELOG.md LICENSE "dist/${ARTIFACT_NAME}/"
+                    tar -czf "${ARTIFACT_NAME}.tar.gz" -C dist "${ARTIFACT_NAME}"
+
+            -   name: Package Windows
+                if: runner.os == 'Windows'
+                shell: pwsh
+                run: |
+                    $artifactName = "peripheralos-${{ needs.prepare.outputs.version }}-${{ matrix.name }}"
+                    New-Item -ItemType Directory -Force -Path "dist/$artifactName"
+                    Copy-Item "${{ matrix.executable_path }}" "dist/$artifactName/peripheralos.exe"
+                    Copy-Item README.md "dist/$artifactName/README.md"
+                    Copy-Item CHANGELOG.md "dist/$artifactName/CHANGELOG.md"
+                    Copy-Item LICENSE "dist/$artifactName/LICENSE"
+                    Compress-Archive -Path "dist/$artifactName" -DestinationPath "$artifactName.zip" -Force
+
+            -   name: Upload artifact
+                uses: actions/upload-artifact@v4
+                with:
+                    name: peripheralos-${{ needs.prepare.outputs.version }}-${{ matrix.name }}
+                    path: |
+                        *.tar.gz
+                        *.zip
+
+    release:
+        needs:
+            - prepare
+            - build
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            -   name: Download artifacts
+                uses: actions/download-artifact@v4
+                with:
+                    path: release-assets
+
+            -   name: Prepare release notes from CHANGELOG
+                shell: bash
+                run: |
+                    VERSION="${{ needs.prepare.outputs.version }}"
+                    VERSION="${VERSION#v}"
+
+                    awk -v version="$VERSION" '
+                      $0 ~ "^## \\[" version "\\]" { capture=1; print; next }
+                      /^## \[/ && capture==1 { capture=0 }
+                      capture==1 { print }
+                    ' CHANGELOG.md > RELEASE_NOTES.md
+
+                    if [ ! -s RELEASE_NOTES.md ]; then
+                      echo "PeripheralOS ${{ needs.prepare.outputs.version }}" > RELEASE_NOTES.md
+                    fi
+
+            -   name: Create GitHub Release
+                uses: softprops/action-gh-release@v2
+                with:
+                    tag_name: ${{ needs.prepare.outputs.version }}
+                    name: ${{ needs.prepare.outputs.title }}
+                    body_path: RELEASE_NOTES.md
+                    prerelease: ${{ contains(needs.prepare.outputs.version, 'alpha') || contains(needs.prepare.outputs.version, 'beta') || contains(needs.prepare.outputs.version, 'rc') }}
+                    files: |
+                        release-assets/**/*.tar.gz
+                        release-assets/**/*.zip

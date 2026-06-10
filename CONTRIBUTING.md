@@ -2,7 +2,8 @@
 
 Thank you for your interest in contributing to PeripheralOS.
 
-PeripheralOS aims to become a cross-platform peripheral management platform supporting gaming mice, keyboards, headsets, controllers and other HID devices on Linux, Windows and macOS.
+PeripheralOS aims to become a cross-platform peripheral management platform supporting gaming mice, keyboards, headsets,
+controllers and other HID devices on Linux, Windows and macOS.
 
 ---
 
@@ -25,7 +26,7 @@ Contributors should avoid platform-specific implementations unless they are isol
 # Supported Platforms
 
 | Platform | Status                       |
-| -------- | ---------------------------- |
+|----------|------------------------------|
 | Linux    | Primary Development Platform |
 | Windows  | Supported                    |
 | macOS    | Supported                    |
@@ -256,6 +257,23 @@ refactor(core): simplify device manager
 
 docs(readme): update build instructions
 ```
+
+---
+
+# Release Process
+
+PeripheralOS releases are created from Git tags.
+
+The release version, release title and artifact names are derived from the pushed Git tag.
+
+## Release Branch Policy
+
+PeripheralOS uses the following branch model:
+
+```text
+master  -> release branch
+dev     -> active development branch
+feature/* -> isolated feature work
 
 ---
 
