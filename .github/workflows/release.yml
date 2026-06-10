@@ -18,7 +18,7 @@ jobs:
             version: ${{ steps.meta.outputs.version }}
             title: ${{ steps.meta.outputs.title }}
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
 
             -   name: Read release metadata from tag
                 id: meta
@@ -53,7 +53,7 @@ jobs:
                         package_ext: tar.gz
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
 
             -   name: Install Linux dependencies
                 if: runner.os == 'Linux'
@@ -90,7 +90,7 @@ jobs:
                     Compress-Archive -Path "dist/$artifactName" -DestinationPath "$artifactName.zip" -Force
 
             -   name: Upload artifact
-                uses: actions/upload-artifact@v4
+                uses: actions/upload-artifact@v5
                 with:
                     name: peripheralos-${{ needs.prepare.outputs.version }}-${{ matrix.name }}
                     path: |
@@ -104,10 +104,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
 
             -   name: Download artifacts
-                uses: actions/download-artifact@v4
+                uses: actions/download-artifact@v5
                 with:
                     path: release-assets
 
