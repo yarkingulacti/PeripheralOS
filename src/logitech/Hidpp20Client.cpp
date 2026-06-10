@@ -1,5 +1,6 @@
 #include "peripheralos/logitech/Hidpp20Client.hpp"
 #include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
+#include "peripheralos/logitech/HidppBattery.hpp"
 
 #include <chrono>
 #include <thread>
@@ -207,5 +208,33 @@ namespace peripheralos::logitech
     )
     {
         return request(featureIndex, functionId, params);
+    }
+
+    std::optional<devices::BatteryInfo> Hidpp20Client::getBatteryInfo()
+    {
+        const auto featureIndex = getFeatureIndex(hidpp20::features::UnifiedBattery);
+
+        if (!featureIndex.has_value())
+        {
+            return std::nullopt;
+        }
+
+        const auto response = request(
+            *featureIndex,
+            0x00,
+            {0x00, 0x00, 0x00}
+        );
+
+        const auto parsedBattery = parseUnifiedBatteryResponse(response);
+
+        if (!parsedBattery.has_value())
+        {
+            return std::nullopt;
+        }
+
+        return devices::BatteryInfo{
+            .percentage = parsedBattery->percentage,
+            .status = devices::BatteryStatus::Unknown
+        };
     }
 }

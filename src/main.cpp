@@ -159,6 +159,21 @@ namespace
                             parsedBattery->secondaryLevel,
                             parsedBattery->statusByte
                         );
+
+                        const auto batteryInfo = hidpp.getBatteryInfo();
+
+                        if (batteryInfo.has_value())
+                        {
+                            fmt::print(
+                                "  -> Battery: {}%, status={}\n",
+                                batteryInfo->percentage,
+                                peripheralos::devices::toString(batteryInfo->status)
+                            );
+                        }
+                        else
+                        {
+                            fmt::print("  -> Battery info read failed\n");
+                        }
                     }
                 }
                 else

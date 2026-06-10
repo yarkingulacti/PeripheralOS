@@ -1,6 +1,7 @@
 #pragma once
 
 #include "peripheralos/platform/linux/LinuxHidDevice.hpp"
+#include "peripheralos/devices/BatteryInfo.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -22,6 +23,7 @@ namespace peripheralos::logitech
             std::uint8_t functionId,
             const std::vector<std::uint8_t>& params
         );
+        std::optional<devices::BatteryInfo> getBatteryInfo();
 
     private:
         platform::linux::LinuxHidDevice& device_;
