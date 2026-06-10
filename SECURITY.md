@@ -1,97 +1,70 @@
 # Security Policy
 
-Thank you for helping keep PeripheralOS secure.
-
-We take security seriously and appreciate responsible disclosure of security vulnerabilities.
-
----
-
 ## Supported Versions
 
-The following versions currently receive security updates:
+| Version      | Supported |
+|--------------|-----------|
+| v0.2.x-alpha | ✅         |
+| v0.1.x-alpha | ❌         |
 
-| Version        | Supported |
-|----------------|-----------|
-| v0.x           | ✅ Yes     |
-| Older releases | ❌ No      |
-
-During the alpha phase, security fixes may be delivered through regular feature releases.
+Only the latest development milestone receives security-related fixes.
 
 ---
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please do **not** create a public GitHub issue.
+If you discover a security vulnerability, please do not open a public issue immediately.
 
-Instead, report it privately.
+Instead:
 
-### Contact
-
-GitHub:
-
-```text
-https://github.com/yarkingulacti
-```
-
-Email:
-
-```text
-security@peripheralos.dev
-```
-
-If the email address is not yet active, please use GitHub Discussions or contact the maintainer directly through GitHub.
-
----
-
-## What to Include
-
-Please include:
-
-* Vulnerability description
-* Affected version
-* Steps to reproduce
-* Proof of concept (if available)
-* Impact assessment
-* Suggested mitigation (optional)
-
-The more information provided, the faster the issue can be investigated.
-
----
-
-## Response Process
-
-PeripheralOS aims to:
-
-1. Acknowledge reports within 7 days
-2. Validate the issue
-3. Develop and test a fix
-4. Release a patched version
-5. Publicly disclose the issue when appropriate
+1. Contact the maintainer privately.
+2. Provide detailed reproduction steps.
+3. Include affected versions.
+4. Include proof-of-concept information when appropriate.
 
 ---
 
 ## Scope
 
-Examples of security-sensitive areas include:
+Examples of relevant vulnerabilities:
 
-* HID communication
-* Device firmware interactions
-* Profile import/export
-* Plugin system
-* Configuration loading
-* Future cloud synchronization features
+* Arbitrary code execution
+* Privilege escalation
+* Unsafe device access
+* Memory corruption
+* Remote attack vectors
+* Sensitive information exposure
+
+Examples of non-security issues:
+
+* Feature requests
+* Device compatibility requests
+* Documentation issues
+* General bugs
 
 ---
 
-## Security Goals
+## Disclosure Process
 
-PeripheralOS is designed with the following principles:
+1. Vulnerability reported.
+2. Investigation performed.
+3. Fix developed.
+4. Fix released.
+5. Public disclosure when appropriate.
 
-* Least privilege
-* Secure defaults
-* Memory safety best practices
-* Modern C++20
-* Minimal external dependencies
-* Cross-platform consistency
+---
 
-Thank you for helping improve the security of PeripheralOS.
+## Device Safety
+
+PeripheralOS interacts directly with hardware devices.
+
+Security and safety are treated as equally important.
+
+The project prioritizes:
+
+* Read-only implementation before write support
+* Protocol validation
+* Hardware safety
+* Defensive programming
+
+See docs/design-principles.md for additional details.

@@ -1,296 +1,161 @@
-# Release Process
+# Contributing to PeripheralOS
 
-PeripheralOS releases are created from Git tags.
+Thank you for your interest in contributing to PeripheralOS.
 
-Release version, release title, release artifacts and GitHub Releases are generated from the pushed version tag.
-
----
-
-## Release Branch Policy
-
-PeripheralOS uses the following branch model:
-
-```text
-master      -> release branch
-dev         -> active development branch
-feature/*   -> isolated feature branches
-```
-
-### Rules
-
-* All development must happen in `dev` or `feature/*` branches.
-* `master` must only contain release-ready code.
-* Releases must always be created from `master`.
-* Feature branches must be merged into `dev`.
-* `dev` must be merged into `master` before creating a release tag.
+PeripheralOS is an open-source cross-platform peripheral management platform focused on maintainability, safety and
+long-term sustainability.
 
 ---
 
-## Versioning
+# Before Contributing
 
-PeripheralOS follows Semantic Versioning.
+Please review:
 
-Examples:
+* README.md
+* docs/design-principles.md
+* docs/architecture.md
+* docs/project-structure.md
+* docs/development-workflow.md
 
-```text
-v0.1.0-alpha
-v0.2.0-alpha
-v0.3.0-beta
-v1.0.0
-```
-
-### Release Types
-
-| Type   | Description                      |
-|--------|----------------------------------|
-| alpha  | Early development release        |
-| beta   | Feature-complete testing release |
-| rc     | Release candidate                |
-| stable | Production-ready release         |
+Understanding the project's architecture and philosophy helps keep contributions consistent.
 
 ---
 
-## Release Workflow
+# Development Requirements
 
-### 1. Develop Features
+## Languages
 
-Create a feature branch:
+* C++20
 
-```bash
-git checkout dev
-git checkout -b feature/hidpp-battery
-```
+## Build System
 
-Work on the feature and commit changes.
+* CMake
+* Ninja
 
----
+## Platforms
 
-### 2. Merge Into Development
-
-```bash
-git checkout dev
-git merge feature/hidpp-battery
-git push origin dev
-```
-
----
-
-### 3. Prepare Release
-
-Verify the project builds successfully:
-
-```bash
-cmake -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build-release
-```
-
-Update:
-
-* CHANGELOG.md
-* README.md (if required)
-* Documentation
-
----
-
-### 4. Merge Development Into Master
-
-```bash
-git checkout master
-git merge dev
-git push origin master
-```
-
----
-
-### 5. Create Release Tag
-
-Example:
-
-```bash
-git tag -a v0.2.0-alpha -m "PeripheralOS v0.2.0-alpha"
-git push origin v0.2.0-alpha
-```
-
----
-
-### 6. GitHub Actions Release
-
-After pushing a version tag, GitHub Actions automatically:
-
-* Builds Linux binaries
-* Builds Windows binaries
-* Builds macOS binaries
-* Packages release artifacts
-* Extracts release notes from `CHANGELOG.md`
-* Creates a GitHub Release
-* Marks alpha, beta and rc versions as pre-releases
-
-No manual GitHub Release creation is required.
-
----
-
-## Changelog Requirements
-
-Every release must have a matching changelog entry.
-
-Release notes are generated from `CHANGELOG.md`.
-
-Required structure:
-
-```md
-## [0.2.0-alpha] - YYYY-MM-DD
-
-### 🚀 Added
-
-#### Core Infrastructure
-
-- ...
-
-#### Device Layer
-
-- ...
-
-#### Vendor Support
-
-- ...
-
-#### Runtime Improvements
-
-- ...
-
----
-
-### ✅ Supported Devices
-
-#### Vendor
-
-- Device
-
----
-
-### ⚠ Known Limitations
-
-#### Platform Support
-
-- ...
-
-#### Device Features
-
-- ...
-
-#### User Experience
-
-- ...
-
----
-
-### 📦 Release Artifacts
-
-- Linux x86_64
-- Windows x86_64
-- macOS
-
----
-
-### 📝 Notes
-
-...
-
----
-
-### 🎯 Next Milestone
-
-#### v0.3.0-alpha
-
-- ...
-```
-
----
-
-## Device Support Classification
-
-Supported devices must be classified using one of the following levels:
-
-### Detection Only
-
-The device can be discovered but no functionality is implemented.
-
-Example:
-
-```text
-Wraith W75 (detection only)
-```
-
-### Experimental
-
-The device is partially supported and APIs may change.
-
-Example:
-
-```text
-Logitech PRO 2 LIGHTSPEED (experimental)
-```
-
-### Functional
-
-Core functionality is implemented and tested.
-
-Example:
-
-```text
-Logitech PRO 2 LIGHTSPEED (functional)
-```
-
-### Stable
-
-The device is considered production-ready.
-
-Example:
-
-```text
-Logitech PRO 2 LIGHTSPEED (stable)
-```
-
----
-
-## Release Artifacts
-
-Current release targets:
-
-* Linux x86_64
-* Windows x86_64
+* Linux
+* Windows
 * macOS
 
-Artifact naming convention:
+---
+
+# Branch Strategy
+
+PeripheralOS uses:
 
 ```text
-peripheralos-<version>-<platform>
+master
+dev
+feature/*
 ```
 
-Examples:
+### master
+
+Production-ready branch.
+
+### dev
+
+Active development branch.
+
+### feature/*
+
+Feature-specific branches.
+
+Example:
 
 ```text
-peripheralos-v0.1.0-alpha-linux-x86_64.tar.gz
-peripheralos-v0.1.0-alpha-windows-x86_64.zip
-peripheralos-v0.1.0-alpha-macos-arm64.tar.gz
+feature/unified-battery
+feature/device-capabilities
+feature/fw-version
 ```
 
 ---
 
-## Moving an Existing Tag
+# Commit Convention
 
-If a release tag was created before the final release commit:
+Use Conventional Commits.
 
-```bash
-git tag -d v0.1.0-alpha
-git tag -a v0.1.0-alpha -m "PeripheralOS v0.1.0-alpha"
+Examples:
+
+```text
+feat(hidpp): add unified battery support
+feat(device): add capability model
+fix(linux): handle invalid hid reports
+docs(roadmap): update v0.2.0-alpha goals
+refactor(core): simplify device discovery
 ```
 
-If the tag was already pushed:
+---
 
-```bash
-git push origin :refs/tags/v0.1.0-alpha
-git push origin v0.1.0-alpha
-```
+# Pull Requests
 
-Use this carefully because moving published tags may confuse contributors.
+Every pull request should:
+
+* Solve a single problem
+* Follow project architecture
+* Build successfully
+* Update documentation when required
+
+Checklist:
+
+* [ ] Builds successfully
+* [ ] Documentation updated
+* [ ] CHANGELOG updated
+* [ ] Architecture respected
+* [ ] Tested locally
+
+---
+
+# Documentation Rule
+
+Documentation is considered part of the implementation.
+
+Relevant documentation must be updated whenever functionality changes.
+
+Examples:
+
+* README.md
+* CHANGELOG.md
+* docs/architecture.md
+* docs/device-support.md
+* docs/hidpp-notes.md
+* docs/roadmap.md
+
+---
+
+# Code Style
+
+Prefer:
+
+* RAII
+* std::unique_ptr
+* std::optional
+* Explicit ownership
+
+Avoid:
+
+* Raw owning pointers
+* Global mutable state
+* Hidden dependencies
+
+---
+
+# Reporting Issues
+
+When reporting issues include:
+
+* Platform
+* Device
+* Reproduction steps
+* Logs
+* Expected behavior
+* Actual behavior
+
+---
+
+# Community
+
+Be respectful and constructive.
+
+See CODE_OF_CONDUCT.md for details.

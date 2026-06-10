@@ -1,29 +1,39 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to PeripheralOS will be documented in this file.
+
+The format is based on Keep a Changelog and Semantic Versioning.
+
+---
 
 ## [Unreleased]
 
-### Planned
+### Added
 
-#### Battery Support
+#### Documentation
 
-* Logitech HID++ UNIFIED_BATTERY feature support
-* Battery percentage reading
-* Battery status reading
-* Charging state detection
+* Added Design Principles documentation
+* Added Project Structure documentation
+* Added Development Workflow documentation
+* Expanded Architecture documentation
+* Expanded Device Support documentation
+* Expanded HID++ development notes
+* Added Security Policy
+* Added Code of Conduct
 
-#### Device Information
+#### Repository Management
 
-* Firmware information reading
-* Serial number reading
-* Capability discovery
+* Added documentation index
+* Added contributor workflow
+* Added project roadmap
+* Added release workflow documentation
 
-#### Internal Improvements
+#### Project Planning
 
-* Device abstraction improvements
-* HID++ feature wrappers
-* Improved runtime diagnostics
+* Defined v0.2.0-alpha goals
+* Defined future milestone roadmap
+* Established documentation standards
+* Established development standards
 
 ---
 
@@ -31,52 +41,73 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-* Initial project structure
+#### Core Infrastructure
+
+* Initial PeripheralOS repository structure
 * Cross-platform CMake configuration
-* Linux, Windows and macOS Release build configuration
-* Release packaging configuration with CPack
-* Git commit metadata embedding
-* Linux HID discovery layer
-* Linux hidraw device enumeration
-* Device identification system
-* Logitech device registry
-* Logitech HID++ 2.0 transport layer
-* HID++ feature discovery support
-* HID++ DEVICE_NAME feature support
+* Ninja build support
+* GitHub Actions release pipeline
+* Automated release artifact generation
+
+#### Linux Backend
+
+* Linux HID discovery
+* Linux hidraw enumeration
+* Linux device metadata collection
+
+#### Logitech HID++
+
+* Logitech HID++ 2.0 transport implementation
+* HID++ feature discovery
+* DEVICE_NAME feature support
 * Logitech PRO 2 LIGHTSPEED detection
-* Logitech PRO 2 LIGHTSPEED device name length reading
-* Logitech PRO 2 LIGHTSPEED device name reading
-* Improved runtime information output
-* GitHub Actions release workflow plan
+* Device name retrieval
+
+#### Documentation
+
+* Initial README
+* Architecture documentation
+* Roadmap documentation
 
 ### Supported Devices
 
-* Logitech PRO 2 LIGHTSPEED experimental Linux HID++ support
-* Logitech LIGHTSPEED Receiver detection
-* Logitech PRO X Wireless Gaming Headset detection
-* Wraith W75 detection
+#### Logitech
 
-### Release Artifacts
+* PRO 2 LIGHTSPEED (Experimental)
+* LIGHTSPEED Receiver (Detection Only)
+* PRO X Wireless Gaming Headset (Detection Only)
 
-This release is intended to provide binaries for:
+#### Wraith
 
-* Linux x86_64
-* Windows x86_64
-* macOS arm64 / x86_64 depending on GitHub hosted runner availability
+* W75 (Detection Only)
+
+### Known Limitations
+
+#### Device Features
+
+* Battery information unavailable
+* Firmware information unavailable
+* Serial number unavailable
+* DPI support unavailable
+* Polling rate support unavailable
+* RGB support unavailable
+
+#### Platforms
+
+* Linux backend only
+* Windows backend planned
+* macOS backend planned
 
 ### Notes
 
-This release represents the first working proof-of-concept of PeripheralOS.
+This release represents the first functional PeripheralOS prototype capable of discovering Logitech HID++ devices and
+retrieving device metadata.
 
-PeripheralOS can currently:
+### Next Milestone
 
-* Build on Linux, Windows and macOS
-* Discover HID devices on Linux
-* Detect supported Logitech devices
-* Open HID devices through hidraw
-* Communicate using Logitech HID++ 2.0
-* Query HID++ device features
-* Read Logitech HID++ device names
+#### v0.2.0-alpha
 
-Windows and macOS binaries are currently build-validation artifacts. Runtime device backends for Windows and macOS are
-planned for future versions.
+* Battery support
+* Firmware information
+* Serial number support
+* Capability discovery

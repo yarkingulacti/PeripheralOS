@@ -1,0 +1,42 @@
+name: Device Support Request
+description: Request support for a new device
+title: "[Device]: "
+labels:
+
+* type:feature
+
+body:
+
+* type: input
+  id: vendor
+  attributes:
+  label: Vendor
+
+* type: input
+  id: device
+  attributes:
+  label: Device Name
+
+* type: input
+  id: vid
+  attributes:
+  label: USB Vendor ID
+
+* type: input
+  id: pid
+  attributes:
+  label: USB Product ID
+
+* type: dropdown
+  id: connection
+  attributes:
+  label: Connection Type
+  options:
+  - USB
+  - Wireless
+  - Bluetooth
+
+* type: textarea
+  id: notes
+  attributes:
+  label: Additional Information

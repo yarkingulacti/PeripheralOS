@@ -1,282 +1,138 @@
-# PeripheralOS Roadmap
+# Roadmap
 
-This document describes the planned release roadmap for PeripheralOS.
+This document outlines the planned development path for PeripheralOS.
 
-The roadmap is expected to evolve as hardware support expands.
-
----
-
-## Versioning
-
-PeripheralOS follows Semantic Versioning.
-
-Format:
-
-```text
-vMAJOR.MINOR.PATCH-suffix
-````
-
-Examples:
-
-```text
-v0.1.0-alpha
-v0.2.0-alpha
-v0.3.0-beta
-v1.0.0
-```
+Roadmap items may change as development progresses.
 
 ---
 
-## Release Philosophy
+# v0.2.0-alpha
 
-PeripheralOS releases are milestone-driven.
+Focus:
 
-Each release should deliver one clear layer of functionality.
+Device telemetry and capability discovery.
 
-Alpha releases may be incomplete and experimental.
+Goals:
 
-Stable releases must be suitable for daily use.
+* Battery support
+* Battery status detection
+* Firmware information
+* Serial number support
+* Capability discovery
+* Runtime diagnostics
+* CLI device information command
 
----
-
-## v0.1.0-alpha
-
-### Status
-
-Released.
-
-### Focus
-
-Initial working proof-of-concept.
-
-### Completed
-
-* Project structure
-* Cross-platform CMake configuration
-* Linux HID discovery
-* Linux hidraw enumeration
-* Device identification
-* Logitech HID++ 2.0 transport
-* HID++ feature discovery
-* Logitech PRO 2 LIGHTSPEED detection
-* Logitech HID++ device name reading
-* GitHub Actions release workflow
-* Linux, Windows and macOS release artifacts
-
----
-
-## v0.2.0-alpha
-
-### Due Date
-
-2026-06-30
-
-### Focus
-
-Battery and device information.
-
-### Goals
-
-* Logitech HID++ UNIFIED_BATTERY support
-* Battery percentage reading
-* Battery status reading
-* Charging state detection
-* Firmware information reading
-* Device serial number reading
-* Model ID reading
-* Unit ID reading
-* Device capability discovery
-* Improved runtime diagnostics
-
-### Success Criteria
-
-PeripheralOS can identify a Logitech PRO 2 LIGHTSPEED and display:
-
-* Device name
-* Battery percentage
-* Battery status
-* Firmware version
-* Serial number
-* Device identifiers
-
-### Target Device
+Target Device:
 
 * Logitech PRO 2 LIGHTSPEED
 
 ---
 
-## v0.3.0-alpha
+# v0.3.0-alpha
 
-### Due Date
-
-2026-07-31
-
-### Focus
+Focus:
 
 Performance configuration.
 
-### Goals
+Goals:
 
+* DPI feature discovery
 * DPI reading
 * DPI configuration
+* Polling rate discovery
 * Polling rate reading
 * Polling rate configuration
-* Lift-off distance reading
-* Sensor information support
-* Safe writable HID++ commands
-* Runtime confirmation before modifying device settings
-
-### Success Criteria
-
-Users can read and modify core mouse performance settings.
-
-Expected functionality:
-
-```bash
-peripheralos dpi get
-peripheralos dpi set 1600
-peripheralos polling-rate get
-peripheralos polling-rate set 1000
-```
+* Sensor information
 
 ---
 
-## v0.4.0-alpha
+# v0.4.0-alpha
 
-### Due Date
+Focus:
 
-2026-08-31
+Device customization.
 
-### Focus
+Goals:
 
-RGB and profile system.
-
-### Goals
-
+* RGB feature discovery
 * RGB state reading
 * RGB configuration
 * RGB effects
-* RGB synchronization
-* Onboard profile detection
-* Profile switching
-* Profile persistence
-* JSON profile storage
+* Profile support
+* Onboard profile support
 
-### Success Criteria
+---
 
-PeripheralOS can manage lighting and onboard profiles for supported devices.
+# v0.5.0-alpha
 
-Expected functionality:
+Focus:
 
-```bash
-peripheralos rgb get
-peripheralos rgb set static --color "#00ffcc"
-peripheralos profile list
-peripheralos profile activate fps
+Background services and automation.
+
+Goals:
+
+* PeripheralOS daemon
+* Configuration persistence
+* Device monitoring
+* Hotplug support
+* Event system
+* Automation engine
+* Profile triggers
+
+---
+
+# v0.6.0-alpha
+
+Focus:
+
+Graphical user interface.
+
+Goals:
+
+* Qt application
+* Device dashboard
+* Battery monitoring UI
+* DPI editor
+* RGB editor
+* Profile editor
+* Settings page
+
+Technology:
+
+```text
+Qt 6
 ```
 
 ---
 
-## v0.5.0-alpha
+# v1.0.0
 
-### Due Date
+Focus:
 
-2026-10-01
+Stable Linux release.
 
-### Focus
-
-Automation and daemon.
-
-### Goals
-
-* PeripheralOS daemon
-* Configuration persistence
-* Profile manager
-* Device monitoring
-* Device hotplug support
-* Event system
-* Runtime config directory
-* Basic IPC channel
-
-### Success Criteria
-
-PeripheralOS can automatically manage connected devices without manual interaction.
-
-Expected functionality:
-
-* Device hotplug detection
-* Background battery monitoring
-* Automatic profile application
-* Config persistence
-
----
-
-## v0.6.0-alpha
-
-### Due Date
-
-2026-11-15
-
-### Focus
-
-Graphical user interface.
-
-### Goals
-
-* Qt 6 application
-* Device dashboard
-* Battery monitoring UI
-* RGB editor
-* DPI editor
-* Profile editor
-* Settings page
-* Logs/diagnostics page
-
-### Success Criteria
-
-Users can manage supported devices entirely through a graphical interface.
-
----
-
-## v1.0.0
-
-### Due Date
-
-2027-01-31
-
-### Focus
-
-First stable release.
-
-### Goals
+Goals:
 
 * Stable Linux backend
-* Stable Logitech HID++ implementation
-* Device profile system
-* Per-game profile switching
-* Plugin architecture foundation
-* Complete documentation
-* Public contributor onboarding
-* Release-quality packaging
-* User-facing installation instructions
+* Windows HID backend
+* macOS HID backend
+* Logitech compatibility testing
+* Documentation review
+* Release preparation
 
-### Success Criteria
+Expected Result:
 
-PeripheralOS is production-ready for daily use on Linux and supports a complete Logitech workflow.
+A stable cross-platform peripheral management platform with complete Logitech workflow support.
 
 ---
 
-## Future Releases
+# Long-Term Vision
 
-Future versions may include:
+PeripheralOS aims to become:
 
-* Windows runtime backend
-* macOS runtime backend
-* More Logitech devices
-* Wraith keyboard support
-* SteelSeries support
-* Razer support
-* Corsair support
-* Plugin SDK
-* Community device database
-* Cloud profile sync
+* Vendor-independent
+* Cross-platform
+* Community-driven
+* Openly documented
+
+The long-term goal is to provide a unified alternative to vendor-specific peripheral management software.

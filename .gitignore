@@ -59,3 +59,7 @@ dist/
 !src/**
 !include/**
 !tests/**
+
+# Development scripts
+
+scripts/

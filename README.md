@@ -1,12 +1,31 @@
 # PeripheralOS
 
-![Version](https://img.shields.io/badge/version-v0.1.0--alpha-blue)
+![CI](https://github.com/yarkingulacti/PeripheralOS/actions/workflows/release.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/yarkingulacti/PeripheralOS)
+![License](https://img.shields.io/github/license/yarkingulacti/PeripheralOS)
+![Issues](https://img.shields.io/github/issues/yarkingulacti/PeripheralOS)
+![Pull Requests](https://img.shields.io/github/issues-pr/yarkingulacti/PeripheralOS)
+![Last Commit](https://img.shields.io/github/last-commit/yarkingulacti/PeripheralOS)
+![Repo Size](https://img.shields.io/github/repo-size/yarkingulacti/PeripheralOS)
+![Stars](https://img.shields.io/github/stars/yarkingulacti/PeripheralOS)
+![Forks](https://img.shields.io/github/forks/yarkingulacti/PeripheralOS)
+
+![Milestone](https://img.shields.io/badge/milestone-v0.2.0--alpha-purple)
 ![Status](https://img.shields.io/badge/status-early%20development-orange)
+
 ![Linux](https://img.shields.io/badge/Linux-Alpha-success)
 ![Windows](https://img.shields.io/badge/Windows-Planned-lightgrey)
 ![macOS](https://img.shields.io/badge/macOS-Planned-lightgrey)
+
 ![C++](https://img.shields.io/badge/C%2B%2B-20-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![CMake](https://img.shields.io/badge/CMake-3.25%2B-064F8C)
+![Ninja](https://img.shields.io/badge/Ninja-Build-44CC11)
+
+![Qt](https://img.shields.io/badge/Qt%206-Planned-41CD52)
+![Logitech HID++](https://img.shields.io/badge/Logitech-HID++%202.0-00B8FC)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-success)
+![Contributions](https://img.shields.io/badge/Contributions-Welcome-brightgreen)
+![Documentation](https://img.shields.io/badge/Docs-Available-blue)
 
 <div align="center">
 
@@ -27,7 +46,7 @@ Linux • Windows • macOS
 
 PeripheralOS aims to provide a unified platform for managing gaming peripherals across operating systems.
 
-Instead of requiring vendor-specific applications for every device, PeripheralOS will offer a single platform capable of
+Instead of requiring vendor-specific applications for every device, PeripheralOS provides a single platform capable of
 managing:
 
 * Gaming Mice
@@ -41,183 +60,103 @@ Our goal is to eliminate vendor lock-in and bring feature parity across Linux, W
 
 ---
 
+## Why PeripheralOS?
+
+Gaming peripherals are increasingly locked behind vendor-specific ecosystems.
+
+A user may need to install multiple applications just to manage devices from different manufacturers:
+
+* Logitech G HUB
+* Razer Synapse
+* SteelSeries GG
+* Corsair iCUE
+* Armoury Crate
+
+PeripheralOS aims to provide a single open-source platform that works across operating systems and vendors.
+
+### Core Principles
+
+* Cross-platform support
+* Local-first operation
+* No vendor lock-in
+* Open documentation
+* Community-driven device support
+* Long-term maintainability
+
+---
+
 ## Project Status
 
 PeripheralOS is currently in active alpha development.
 
-Current milestone:
+### Current Milestone
 
-### v0.2.0-alpha
+#### v0.2.0-alpha
 
-#### Planned
+##### Planned
 
 * [ ] Battery Information
 * [ ] Firmware Information
 * [ ] Device Serial Number
 * [ ] Device Capability Discovery
 
-#### Completed
+##### Completed
 
 * [x] Device Discovery
+* [x] Linux HID Enumeration
 * [x] Logitech HID++ Integration
 * [x] HID++ Feature Discovery
 * [x] Logitech PRO 2 LIGHTSPEED Detection
 * [x] Logitech HID++ Device Name Reading
 
-Target device:
+### Current Target Device
 
 * Logitech PRO 2 LIGHTSPEED
 
-Development platform:
+### Primary Development Platform
 
-* CachyOS Linux
+* Linux (CachyOS)
 
 ---
 
-## Planned Features
+## Current Device Support
 
-### Device Management
+| Vendor   | Device                        | Support Level  |
+|----------|-------------------------------|----------------|
+| Logitech | PRO 2 LIGHTSPEED              | Experimental   |
+| Logitech | LIGHTSPEED Receiver           | Detection Only |
+| Logitech | PRO X Wireless Gaming Headset | Detection Only |
+| Wraith   | W75                           | Detection Only |
 
-* Device Discovery
-* Device Monitoring
-* Battery Monitoring
-* Firmware Information
-* Device Information
+For detailed information see:
 
-### Performance
-
-* DPI Management
-* Polling Rate Management
-* Lift-Off Distance Configuration
-* Sensor Configuration
-
-### RGB
-
-* RGB Effects
-* RGB Profiles
-* Device Synchronization
-* Global Lighting Control
-
-### Profiles
-
-* Device Profiles
-* Per-Application Profiles
-* Per-Game Profiles
-* Automatic Profile Switching
-
-### Macros
-
-* Macro Recording
-* Macro Playback
-* Multi-Step Macros
-* Key Remapping
-
-### Automation
-
-* Application Detection
-* Game Detection
-* Profile Triggers
-* Device Events
-
-### Cloud
-
-* Profile Backup
-* Settings Synchronization
-* Device Configuration Export
-
-### Extensibility
-
-* Plugin SDK
-* Community Device Database
-* Third-Party Integrations
+* docs/device-support.md
 
 ---
 
 ## Supported Platforms
 
-| Platform | Build Status | Runtime Status       |
-|----------|--------------|----------------------|
-| Linux    | ✅ Supported  | 🚧 Alpha HID backend |
-| Windows  | ✅ Supported  | 📋 Backend planned   |
-| macOS    | ✅ Supported  | 📋 Backend planned   |
-
----
-
-## Planned Device Support
-
-### Logitech
-
-* G PRO Series
-* PRO X Series
-* LIGHTSPEED Devices
-* HID++ Devices
-
-### Future Vendors
-
-* Wraith
-* SteelSeries
-* Razer
-* Corsair
-* HyperX
-* ASUS ROG
-* Generic HID Devices
-
----
-
-## Architecture
-
-```text
-PeripheralOS
-│
-├── CLI
-├── Daemon
-├── UI
-│
-├── Core
-├── Device Manager
-├── Profile Engine
-├── Macro Engine
-├── RGB Engine
-│
-├── Linux Backend
-├── Windows Backend
-└── macOS Backend
-```
-
-### Platform Backends
-
-Linux
-
-* hidraw
-* libudev
-* DBus
-
-Windows
-
-* SetupAPI
-* RawInput
-* HID
-
-macOS
-
-* IOKit
-* CoreFoundation
+| Platform | Build Support | Runtime Support |
+|----------|---------------|-----------------|
+| Linux    | ✅             | 🚧 Alpha        |
+| Windows  | ✅             | 📋 Planned      |
+| macOS    | ✅             | 📋 Planned      |
 
 ---
 
 ## Technology Stack
 
-| Component       | Technology     |
-|-----------------|----------------|
-| Language        | C++20          |
-| Build System    | CMake          |
-| Build Generator | Ninja          |
-| UI              | Qt 6 (Planned) |
-| Logging         | spdlog         |
-| Formatting      | fmt            |
-| JSON            | nlohmann/json  |
-| Testing         | doctest        |
-| CI/CD           | GitHub Actions |
+| Component    | Technology     |
+|--------------|----------------|
+| Language     | C++20          |
+| Build System | CMake          |
+| Generator    | Ninja          |
+| UI           | Qt 6 (Planned) |
+| Logging      | spdlog         |
+| Formatting   | fmt            |
+| JSON         | nlohmann/json  |
+| Testing      | doctest        |
+| CI/CD        | GitHub Actions |
 
 ---
 
@@ -244,28 +183,24 @@ cmake -B build -G Ninja
 cmake --build build
 ```
 
----
-
 ### Windows
 
-Requirements
+Requirements:
 
 * Visual Studio 2022
 * CMake
 * Ninja
 
-Build
+Build:
 
 ```powershell
 cmake -B build -G Ninja
 cmake --build build
 ```
 
----
-
 ### macOS
 
-Requirements
+Requirements:
 
 * Xcode Command Line Tools
 * Homebrew
@@ -286,48 +221,63 @@ cmake --build build
 
 ---
 
+## Documentation
+
+### Core Documentation
+
+* docs/design-principles.md
+* docs/architecture.md
+* docs/project-structure.md
+* docs/development-workflow.md
+
+### Development Documentation
+
+* docs/device-support.md
+* docs/hidpp-notes.md
+* docs/roadmap.md
+
+### Community Documentation
+
+* CONTRIBUTING.md
+* SECURITY.md
+* CODE_OF_CONDUCT.md
+* CHANGELOG.md
+
+---
+
 ## Roadmap
 
-### Phase 1 — HID Foundation
+### v0.2.0-alpha
 
-* [x] Linux HID Discovery
-* [x] Device Identification
-* [x] Logitech HID++ Communication
-* [x] Feature Discovery
-* [x] Device Name Reading
+* Battery Support
+* Firmware Information
+* Serial Number Support
+* Capability Discovery
 
-### Phase 2 — Device Telemetry
+### v0.3.0-alpha
 
-* [ ] Battery Information
-* [ ] Firmware Information
-* [ ] Device Information
-* [ ] Polling Rate Reading
+* DPI Support
+* Polling Rate Support
 
-### Phase 3 — Device Control
+### v0.4.0-alpha
 
-* [ ] DPI Reading
-* [ ] DPI Configuration
-* [ ] Polling Rate Configuration
-* [ ] RGB Management
+* RGB Support
+* Profile System
 
-### Phase 4 — Profiles & Automation
+### v0.5.0-alpha
 
-* [ ] Profile System
-* [ ] Per-Game Profiles
-* [ ] Automatic Profile Switching
-* [ ] Macro Engine
+* Daemon
+* Automation
+* Device Monitoring
 
-### Phase 5 — User Interface
+### v0.6.0-alpha
 
-* [ ] Qt Device Dashboard
-* [ ] RGB Editor
-* [ ] Profile Editor
+* Qt User Interface
 
-### Phase 6 — Ecosystem
+### v1.0.0
 
-* [ ] Plugin SDK
-* [ ] Community Device Database
-* [ ] Cloud Synchronization
+* Stable Linux Release
+* Complete Logitech Workflow
 
 ---
 
@@ -335,10 +285,11 @@ cmake --build build
 
 Contributions are welcome.
 
-Please read:
+Please review:
 
 * CONTRIBUTING.md
 * SECURITY.md
+* CODE_OF_CONDUCT.md
 
 before opening issues or pull requests.
 
@@ -348,11 +299,11 @@ before opening issues or pull requests.
 
 Distributed under the MIT License.
 
-See LICENSE for more information.
+See LICENSE for details.
 
 ---
 
-## Author
+## Maintainer
 
 Yarkın Gülaçtı
 
@@ -360,5 +311,5 @@ GitHub: https://github.com/yarkingulacti
 
 ---
 
-> PeripheralOS is not affiliated with Logitech, Razer, SteelSeries, Corsair, HyperX, ASUS or any other hardware
+> PeripheralOS is not affiliated with Logitech, Razer, SteelSeries, Corsair, HyperX, ASUS, Wraith or any other hardware
 > manufacturer.
