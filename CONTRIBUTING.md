@@ -1,341 +1,296 @@
-# Contributing to PeripheralOS
-
-Thank you for your interest in contributing to PeripheralOS.
-
-PeripheralOS aims to become a cross-platform peripheral management platform supporting gaming mice, keyboards, headsets,
-controllers and other HID devices on Linux, Windows and macOS.
-
----
-
-# Development Philosophy
-
-We prioritize:
-
-* Clean architecture
-* Cross-platform compatibility
-* Modern C++20
-* RAII
-* Testability
-* Performance
-* Long-term maintainability
-
-Contributors should avoid platform-specific implementations unless they are isolated behind platform abstraction layers.
-
----
-
-# Supported Platforms
-
-| Platform | Status                       |
-|----------|------------------------------|
-| Linux    | Primary Development Platform |
-| Windows  | Supported                    |
-| macOS    | Supported                    |
-
-All new features should be designed with cross-platform support in mind.
-
----
-
-# Development Requirements
-
-## Common Requirements
-
-* CMake >= 3.25
-* C++20
-* Git
-* Ninja
-
-Recommended:
-
-* CLion
-* VS Code
-* Qt Creator
-
----
-
-# Linux Development
-
-## Supported Distributions
-
-* Arch Linux
-* CachyOS
-* Fedora
-* Ubuntu
-* Debian
-
-## Install Dependencies
-
-Arch Linux / CachyOS
-
-```bash
-sudo pacman -S base-devel cmake ninja git pkgconf systemd
-```
-
-Ubuntu / Debian
-
-```bash
-sudo apt install build-essential cmake ninja-build git pkg-config libudev-dev
-```
-
-Build
-
-```bash
-cmake -B build -G Ninja
-cmake --build build
-```
-
----
-
-# Windows Development
-
-## Requirements
-
-* Visual Studio 2022
-* MSVC Toolchain
-* CMake
-* Ninja
-
-Build
-
-```powershell
-cmake -B build -G Ninja
-cmake --build build
-```
-
-Future platform integrations:
-
-* SetupAPI
-* HIDAPI
-* RawInput
-
----
-
-# macOS Development
-
-## Requirements
-
-* Xcode Command Line Tools
-* CMake
-* Ninja
-
-Install tools
-
-```bash
-xcode-select --install
-brew install cmake ninja
-```
-
-Build
-
-```bash
-cmake -B build -G Ninja
-cmake --build build
-```
-
-Future platform integrations:
-
-* IOKit
-* CoreFoundation
-
----
-
-# Repository Structure
-
-```text
-PeripheralOS/
-├── docs/
-├── include/
-├── src/
-│   ├── core/
-│   ├── devices/
-│   ├── hid/
-│   ├── platform/
-│   ├── profiles/
-│   └── rgb/
-├── tests/
-└── third_party/
-```
-
----
-
-# Coding Standards
-
-## C++
-
-Use:
-
-* std::unique_ptr
-* std::shared_ptr only when ownership is shared
-* std::optional
-* std::span
-* std::string_view
-* enum class
-
-Avoid:
-
-* Raw owning pointers
-* Global mutable state
-* Platform-specific code outside platform layer
-* Macros when constexpr is sufficient
-
----
-
-# Naming Conventions
-
-Classes
-
-```cpp
-class DeviceManager;
-class HidDevice;
-```
-
-Methods
-
-```cpp
-void initialize();
-void discoverDevices();
-```
-
-Variables
-
-```cpp
-std::string deviceName;
-int pollingRate;
-```
-
-Constants
-
-```cpp
-constexpr int DefaultPollingRate = 1000;
-```
-
----
-
-# Platform Abstraction Rules
-
-Platform-specific code must stay inside:
-
-```text
-src/platform/
-```
-
-Examples:
-
-Linux
-
-```text
-src/platform/linux/
-```
-
-Windows
-
-```text
-src/platform/windows/
-```
-
-macOS
-
-```text
-src/platform/macos/
-```
-
-Business logic must never directly call platform APIs.
-
----
-
-# Commit Convention
-
-Examples:
-
-```text
-feat(hid): add Logitech HID++ discovery
-
-feat(rgb): add RGB profile loader
-
-fix(linux): prevent hidraw descriptor leak
-
-refactor(core): simplify device manager
-
-docs(readme): update build instructions
-```
-
----
-
 # Release Process
 
 PeripheralOS releases are created from Git tags.
 
-The release version, release title and artifact names are derived from the pushed Git tag.
+Release version, release title, release artifacts and GitHub Releases are generated from the pushed version tag.
+
+---
 
 ## Release Branch Policy
 
 PeripheralOS uses the following branch model:
 
 ```text
-master  -> release branch
-dev     -> active development branch
-feature/* -> isolated feature work
+master      -> release branch
+dev         -> active development branch
+feature/*   -> isolated feature branches
+```
+
+### Rules
+
+* All development must happen in `dev` or `feature/*` branches.
+* `master` must only contain release-ready code.
+* Releases must always be created from `master`.
+* Feature branches must be merged into `dev`.
+* `dev` must be merged into `master` before creating a release tag.
 
 ---
 
-# Pull Requests
+## Versioning
 
-Before opening a pull request:
+PeripheralOS follows Semantic Versioning.
 
-* Build successfully
-* Run tests
-* Follow coding standards
-* Update documentation if required
+Examples:
 
-Pull requests should focus on a single feature or fix.
+```text
+v0.1.0-alpha
+v0.2.0-alpha
+v0.3.0-beta
+v1.0.0
+```
 
----
+### Release Types
 
-# Feature Requests
-
-Feature requests should include:
-
-* Device model
-* Platform
-* Expected behavior
-* Current behavior
-* Relevant logs
-
----
-
-# Bug Reports
-
-Bug reports should include:
-
-* Operating system
-* Peripheral model
-* Peripheral firmware version
-* PeripheralOS version
-* Reproduction steps
+| Type   | Description                      |
+|--------|----------------------------------|
+| alpha  | Early development release        |
+| beta   | Feature-complete testing release |
+| rc     | Release candidate                |
+| stable | Production-ready release         |
 
 ---
 
-# Long-Term Goals
+## Release Workflow
 
-PeripheralOS aims to support:
+### 1. Develop Features
 
-* Logitech
-* Wraith
-* SteelSeries
-* Razer
-* Corsair
-* HyperX
-* ASUS ROG
-* Generic HID Devices
+Create a feature branch:
 
-Features:
+```bash
+git checkout dev
+git checkout -b feature/hidpp-battery
+```
 
-* DPI Management
-* RGB Management
-* Polling Rate Control
-* Macro Engine
-* Profile System
-* Per-Game Profiles
-* Cloud Sync
-* Plugin SDK
+Work on the feature and commit changes.
 
-Thank you for contributing to PeripheralOS.
+---
+
+### 2. Merge Into Development
+
+```bash
+git checkout dev
+git merge feature/hidpp-battery
+git push origin dev
+```
+
+---
+
+### 3. Prepare Release
+
+Verify the project builds successfully:
+
+```bash
+cmake -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build-release
+```
+
+Update:
+
+* CHANGELOG.md
+* README.md (if required)
+* Documentation
+
+---
+
+### 4. Merge Development Into Master
+
+```bash
+git checkout master
+git merge dev
+git push origin master
+```
+
+---
+
+### 5. Create Release Tag
+
+Example:
+
+```bash
+git tag -a v0.2.0-alpha -m "PeripheralOS v0.2.0-alpha"
+git push origin v0.2.0-alpha
+```
+
+---
+
+### 6. GitHub Actions Release
+
+After pushing a version tag, GitHub Actions automatically:
+
+* Builds Linux binaries
+* Builds Windows binaries
+* Builds macOS binaries
+* Packages release artifacts
+* Extracts release notes from `CHANGELOG.md`
+* Creates a GitHub Release
+* Marks alpha, beta and rc versions as pre-releases
+
+No manual GitHub Release creation is required.
+
+---
+
+## Changelog Requirements
+
+Every release must have a matching changelog entry.
+
+Release notes are generated from `CHANGELOG.md`.
+
+Required structure:
+
+```md
+## [0.2.0-alpha] - YYYY-MM-DD
+
+### 🚀 Added
+
+#### Core Infrastructure
+
+- ...
+
+#### Device Layer
+
+- ...
+
+#### Vendor Support
+
+- ...
+
+#### Runtime Improvements
+
+- ...
+
+---
+
+### ✅ Supported Devices
+
+#### Vendor
+
+- Device
+
+---
+
+### ⚠ Known Limitations
+
+#### Platform Support
+
+- ...
+
+#### Device Features
+
+- ...
+
+#### User Experience
+
+- ...
+
+---
+
+### 📦 Release Artifacts
+
+- Linux x86_64
+- Windows x86_64
+- macOS
+
+---
+
+### 📝 Notes
+
+...
+
+---
+
+### 🎯 Next Milestone
+
+#### v0.3.0-alpha
+
+- ...
+```
+
+---
+
+## Device Support Classification
+
+Supported devices must be classified using one of the following levels:
+
+### Detection Only
+
+The device can be discovered but no functionality is implemented.
+
+Example:
+
+```text
+Wraith W75 (detection only)
+```
+
+### Experimental
+
+The device is partially supported and APIs may change.
+
+Example:
+
+```text
+Logitech PRO 2 LIGHTSPEED (experimental)
+```
+
+### Functional
+
+Core functionality is implemented and tested.
+
+Example:
+
+```text
+Logitech PRO 2 LIGHTSPEED (functional)
+```
+
+### Stable
+
+The device is considered production-ready.
+
+Example:
+
+```text
+Logitech PRO 2 LIGHTSPEED (stable)
+```
+
+---
+
+## Release Artifacts
+
+Current release targets:
+
+* Linux x86_64
+* Windows x86_64
+* macOS
+
+Artifact naming convention:
+
+```text
+peripheralos-<version>-<platform>
+```
+
+Examples:
+
+```text
+peripheralos-v0.1.0-alpha-linux-x86_64.tar.gz
+peripheralos-v0.1.0-alpha-windows-x86_64.zip
+peripheralos-v0.1.0-alpha-macos-arm64.tar.gz
+```
+
+---
+
+## Moving an Existing Tag
+
+If a release tag was created before the final release commit:
+
+```bash
+git tag -d v0.1.0-alpha
+git tag -a v0.1.0-alpha -m "PeripheralOS v0.1.0-alpha"
+```
+
+If the tag was already pushed:
+
+```bash
+git push origin :refs/tags/v0.1.0-alpha
+git push origin v0.1.0-alpha
+```
+
+Use this carefully because moving published tags may confuse contributors.
