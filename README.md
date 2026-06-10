@@ -4,7 +4,8 @@
 
 ### Open-Source Cross-Platform Peripheral Management Platform
 
-A modern alternative to Logitech G HUB, Razer Synapse, SteelSeries GG and other vendor-locked peripheral management software.
+A modern alternative to Logitech G HUB, Razer Synapse, SteelSeries GG and other vendor-locked peripheral management
+software.
 
 Linux • Windows • macOS
 
@@ -18,7 +19,8 @@ Linux • Windows • macOS
 
 PeripheralOS aims to provide a unified platform for managing gaming peripherals across operating systems.
 
-Instead of requiring vendor-specific applications for every device, PeripheralOS will offer a single platform capable of managing:
+Instead of requiring vendor-specific applications for every device, PeripheralOS will offer a single platform capable of
+managing:
 
 * Gaming Mice
 * Gaming Keyboards
@@ -119,7 +121,7 @@ Development platform:
 ## Supported Platforms
 
 | Platform | Status            |
-| -------- | ----------------- |
+|----------|-------------------|
 | Linux    | 🚧 In Development |
 | Windows  | 📋 Planned        |
 | macOS    | 📋 Planned        |
@@ -191,7 +193,7 @@ macOS
 ## Technology Stack
 
 | Component       | Technology     |
-| --------------- | -------------- |
+|-----------------|----------------|
 | Language        | C++20          |
 | Build System    | CMake          |
 | Build Generator | Ninja          |
@@ -271,37 +273,46 @@ cmake --build build
 
 ## Roadmap
 
-### Phase 1 — Core Foundation
+### Phase 1 — HID Foundation
 
-* Device Discovery
-* HID Layer
-* Logitech HID++ Support
-* Battery Information
-* DPI Control
+* [x] Linux HID Discovery
+* [x] Device Identification
+* [x] Logitech HID++ Communication
+* [x] Feature Discovery
+* [x] Device Name Reading
 
-### Phase 2 — Device Features
+### Phase 2 — Device Telemetry
 
-* Polling Rate Control
-* RGB Management
-* Profile Management
+* [ ] Battery Information
+* [ ] Firmware Information
+* [ ] Device Information
+* [ ] Polling Rate Reading
 
-### Phase 3 — Automation
+### Phase 3 — Device Control
 
-* Per-Game Profiles
-* Application Detection
-* Automatic Switching
+* [ ] DPI Reading
+* [ ] DPI Configuration
+* [ ] Polling Rate Configuration
+* [ ] RGB Management
 
-### Phase 4 — User Experience
+### Phase 4 — Profiles & Automation
 
-* Qt User Interface
-* Device Dashboard
-* Profile Editor
+* [ ] Profile System
+* [ ] Per-Game Profiles
+* [ ] Automatic Profile Switching
+* [ ] Macro Engine
 
-### Phase 5 — Ecosystem
+### Phase 5 — User Interface
 
-* Plugin SDK
-* Community Integrations
-* Cloud Synchronization
+* [ ] Qt Device Dashboard
+* [ ] RGB Editor
+* [ ] Profile Editor
+
+### Phase 6 — Ecosystem
+
+* [ ] Plugin SDK
+* [ ] Community Device Database
+* [ ] Cloud Synchronization
 
 ---
 
@@ -334,4 +345,5 @@ GitHub: https://github.com/yarkingulacti
 
 ---
 
-> PeripheralOS is not affiliated with Logitech, Razer, SteelSeries, Corsair, HyperX, ASUS or any other hardware manufacturer.
+> PeripheralOS is not affiliated with Logitech, Razer, SteelSeries, Corsair, HyperX, ASUS or any other hardware
+> manufacturer.
