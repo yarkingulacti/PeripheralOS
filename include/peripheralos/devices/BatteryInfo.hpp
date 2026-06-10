@@ -8,9 +8,9 @@ namespace peripheralos
     enum class BatteryStatus
     {
         Unknown,
-        Charging,
-        Discharging,
-        Full
+        Recharging,
+        Full,
+        Discharging
     };
 
     struct BatteryInfo
@@ -18,7 +18,7 @@ namespace peripheralos
         int percentage = -1;
         BatteryStatus status = BatteryStatus::Unknown;
 
-        std::uint8_t rawSecondary = 0;
+        std::uint8_t rawLevel = 0;
         std::uint8_t rawStatusByte = 0;
     };
 
@@ -26,15 +26,20 @@ namespace peripheralos
     {
         switch (status)
         {
-        case BatteryStatus::Charging:
-            return "charging";
-        case BatteryStatus::Discharging:
-            return "discharging";
+        case BatteryStatus::Recharging:
+            return "recharging";
         case BatteryStatus::Full:
             return "full";
+        case BatteryStatus::Discharging:
+            return "discharging";
         case BatteryStatus::Unknown:
         default:
             return "unknown";
         }
+    }
+
+    inline BatteryStatus mapUnifiedBatteryStatus(const std::uint8_t /* statusByte */)
+    {
+        return BatteryStatus::Unknown;
     }
 }

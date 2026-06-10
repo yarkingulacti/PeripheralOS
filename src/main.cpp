@@ -2,18 +2,10 @@
 
 #include <exception>
 #include <string>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <vector>
-#include <cstdint>
 
 #if PERIPHERALOS_PLATFORM_LINUX
 #include "peripheralos/devices/DeviceIdentity.hpp"
 #include "peripheralos/logitech/Hidpp20Client.hpp"
-#include "peripheralos/logitech/Hidpp20FeatureIds.hpp"
-#include "peripheralos/logitech/HidppBattery.hpp"
-#include "peripheralos/hidpp/UnifiedBatteryParser.hpp"
 #include "peripheralos/platform/linux/LinuxHidDevice.hpp"
 #include "peripheralos/platform/linux/LinuxHidDiscovery.hpp"
 #endif
@@ -28,27 +20,6 @@
 
 namespace
 {
-    std::string toHexString(const std::vector<std::uint8_t>& data)
-    {
-        std::ostringstream output;
-
-        for (std::size_t i = 0; i < data.size(); ++i)
-        {
-            if (i > 0)
-            {
-                output << ' ';
-            }
-
-            output << std::uppercase
-                << std::hex
-                << std::setw(2)
-                << std::setfill('0')
-                << static_cast<int>(data[i]);
-        }
-
-        return output.str();
-    }
-
     void printHeader()
     {
         fmt::print("\n");
@@ -116,71 +87,19 @@ namespace
 
             peripheralos::logitech::Hidpp20Client hidpp(hidDevice);
 
-            const auto deviceNameFeatureIndex =
-                hidpp.getFeatureIndex(peripheralos::logitech::hidpp20::features::DeviceName);
-            const auto unifiedBatteryFeatureIndex =
-                hidpp.getFeatureIndex(peripheralos::logitech::hidpp20::features::UnifiedBattery);
+            const auto batteryInfo = hidpp.getBatteryInfo();
 
-            if (unifiedBatteryFeatureIndex.has_value())
+            if (batteryInfo.has_value())
             {
-                fmt::print("  -> HID++ UNIFIED_BATTERY feature index: {}\n", *unifiedBatteryFeatureIndex);
-
-                const auto batteryResponse =
-                    hidpp.debugRequest(
-                        *unifiedBatteryFeatureIndex,
-                        0x00,
-                        {0x00, 0x00, 0x00}
-                    );
-
-                if (!batteryResponse.empty())
-                {
-                    fmt::print(
-                        "  -> Battery raw response: {}\n",
-                        toHexString(batteryResponse)
-                    );
-
-                    const auto parsedBattery =
-                        peripheralos::logitech::parseUnifiedBatteryResponse(
-                            batteryResponse
-                        );
-
-                    if (parsedBattery.has_value())
-                    {
-                        fmt::print(
-                            "  -> Battery: {}%, status=unknown\n",
-                            parsedBattery->percentage
-                        );
-
-                        fmt::print(
-                            "  -> Battery raw fields: percentage={}, secondary={}, statusByte={}\n",
-                            parsedBattery->percentage,
-                            parsedBattery->secondary,
-                            parsedBattery->statusByte
-                        );
-                    }
-                    else
-                    {
-                        fmt::print("  -> Battery info read failed\n");
-                    }
-                }
-                else
-                {
-                    fmt::print("  -> UNIFIED_BATTERY request failed\n");
-                }
+                fmt::print(
+                    "  -> Battery: {}%, status={}\n",
+                    batteryInfo->percentage,
+                    peripheralos::toString(batteryInfo->status)
+                );
             }
             else
             {
-                fmt::print("  -> HID++ UNIFIED_BATTERY feature discovery failed\n");
-            }
-
-
-            if (deviceNameFeatureIndex.has_value())
-            {
-                fmt::print("  -> HID++ DEVICE_NAME feature index: {}\n", *deviceNameFeatureIndex);
-            }
-            else
-            {
-                fmt::print("  -> HID++ DEVICE_NAME feature discovery failed\n");
+                fmt::print("  -> Battery info read failed\n");
             }
 
             const auto hidppName = hidpp.getDeviceName();
@@ -203,7 +122,7 @@ namespace
     void runUnsupportedPlatformNotice()
     {
         fmt::print("PeripheralOS CLI built successfully for this platform.\n\n");
-        fmt::print("Current v0.1.0-alpha runtime support:\n");
+        fmt::print("Current v0.2.0-alpha runtime support:\n");
         fmt::print("  Linux HID discovery       : available\n");
         fmt::print("  Logitech HID++ prototype  : available on Linux\n");
         fmt::print("  Windows backend           : planned\n");

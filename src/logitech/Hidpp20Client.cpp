@@ -234,9 +234,59 @@ namespace peripheralos::logitech
 
         return BatteryInfo{
             .percentage = parsedBattery->percentage,
-            .status = BatteryStatus::Unknown,
-            .rawSecondary = parsedBattery->secondary,
+            .status = mapUnifiedBatteryStatus(parsedBattery->statusByte),
+            .rawLevel = parsedBattery->level,
             .rawStatusByte = parsedBattery->statusByte
         };
+    }
+
+    std::vector<std::uint16_t> Hidpp20Client::enumerateFeatures()
+    {
+        std::vector<std::uint16_t> features;
+
+        const auto featureSetIndex =
+            getFeatureIndex(hidpp20::features::FeatureSet);
+
+        if (!featureSetIndex.has_value())
+        {
+            return features;
+        }
+
+        const auto countResponse = request(
+            *featureSetIndex,
+            0x00,
+            {0x00, 0x00, 0x00}
+        );
+
+        if (countResponse.size() < 5 || countResponse[2] == 0xff)
+        {
+            return features;
+        }
+
+        const auto featureCount = countResponse[4];
+
+        for (std::uint8_t featureNumber = 0; featureNumber < featureCount; ++featureNumber)
+        {
+            const auto response = request(
+                *featureSetIndex,
+                0x01,
+                {featureNumber, 0x00, 0x00}
+            );
+
+            if (response.size() < 6 || response[2] == 0xff)
+            {
+                continue;
+            }
+
+            const auto featureId =
+                static_cast<std::uint16_t>(
+                    (static_cast<std::uint16_t>(response[4]) << 8) |
+                    response[5]
+                );
+
+            features.push_back(featureId);
+        }
+
+        return features;
     }
 }
