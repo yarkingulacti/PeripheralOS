@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.25)
 
 project(
-    PeripheralOS
-    VERSION 0.1.0
-    DESCRIPTION "Cross-platform peripheral management platform"
-    HOMEPAGE_URL "https://github.com/yarkingulacti/peripheralos"
-    LANGUAGES CXX
+        PeripheralOS
+        VERSION 0.1.0
+        DESCRIPTION "Cross-platform peripheral management platform"
+        HOMEPAGE_URL "https://github.com/yarkingulacti/peripheralos"
+        LANGUAGES CXX
 )
 
 # ============================================================
@@ -47,9 +47,9 @@ option(PERIPHERALOS_BUILD_UI "Build Qt UI" OFF)
 # Build Type
 # ============================================================
 
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
-endif()
+endif ()
 
 # ============================================================
 # Output Directories
@@ -64,7 +64,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 # ============================================================
 
 set(PERIPHERALOS_SOURCES
-    src/main.cpp
+        src/main.cpp
+        src/platform/linux/LinuxHidDiscovery.cpp
+        src/platform/linux/LinuxHidDevice.cpp
+        src/devices/DeviceIdentity.cpp
+        src/logitech/Hidpp20Client.cpp
 )
 
 set(PERIPHERALOS_HEADERS
@@ -74,42 +78,42 @@ set(PERIPHERALOS_HEADERS
 # Executable
 # ============================================================
 
-if(PERIPHERALOS_BUILD_CLI)
+if (PERIPHERALOS_BUILD_CLI)
     add_executable(${PERIPHERALOS_EXECUTABLE_NAME}
-        ${PERIPHERALOS_SOURCES}
-        ${PERIPHERALOS_HEADERS}
+            ${PERIPHERALOS_SOURCES}
+            ${PERIPHERALOS_HEADERS}
     )
 
     target_include_directories(${PERIPHERALOS_EXECUTABLE_NAME}
-        PRIVATE
+            PRIVATE
             "${PROJECT_SOURCE_DIR}/include"
     )
 
     target_compile_features(${PERIPHERALOS_EXECUTABLE_NAME}
-        PRIVATE
+            PRIVATE
             cxx_std_20
     )
-endif()
+endif ()
 
 # ============================================================
 # Compiler Warnings
 # ============================================================
 
-if(PERIPHERALOS_BUILD_CLI)
-    if(MSVC)
+if (PERIPHERALOS_BUILD_CLI)
+    if (MSVC)
         target_compile_options(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 /W4
                 /permissive-
                 /Zc:__cplusplus
         )
 
-        if(PERIPHERALOS_WARNINGS_AS_ERRORS)
+        if (PERIPHERALOS_WARNINGS_AS_ERRORS)
             target_compile_options(${PERIPHERALOS_EXECUTABLE_NAME} PRIVATE /WX)
-        endif()
-    else()
+        endif ()
+    else ()
         target_compile_options(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 -Wall
                 -Wextra
                 -Wpedantic
@@ -117,32 +121,32 @@ if(PERIPHERALOS_BUILD_CLI)
                 -Wsign-conversion
         )
 
-        if(PERIPHERALOS_WARNINGS_AS_ERRORS)
+        if (PERIPHERALOS_WARNINGS_AS_ERRORS)
             target_compile_options(${PERIPHERALOS_EXECUTABLE_NAME} PRIVATE -Werror)
-        endif()
-    endif()
-endif()
+        endif ()
+    endif ()
+endif ()
 
 # ============================================================
 # Platform Defines
 # ============================================================
 
-if(WIN32)
+if (WIN32)
     set(PERIPHERALOS_PLATFORM "Windows")
     set(PERIPHERALOS_PLATFORM_WINDOWS ON)
-elseif(APPLE)
+elseif (APPLE)
     set(PERIPHERALOS_PLATFORM "macOS")
     set(PERIPHERALOS_PLATFORM_MACOS ON)
-elseif(UNIX)
+elseif (UNIX)
     set(PERIPHERALOS_PLATFORM "Linux")
     set(PERIPHERALOS_PLATFORM_LINUX ON)
-else()
+else ()
     set(PERIPHERALOS_PLATFORM "Unknown")
-endif()
+endif ()
 
-if(PERIPHERALOS_BUILD_CLI)
+if (PERIPHERALOS_BUILD_CLI)
     target_compile_definitions(${PERIPHERALOS_EXECUTABLE_NAME}
-        PRIVATE
+            PRIVATE
             PERIPHERALOS_NAME="${PERIPHERALOS_NAME}"
             PERIPHERALOS_AUTHOR="${PERIPHERALOS_AUTHOR}"
             PERIPHERALOS_VENDOR="${PERIPHERALOS_VENDOR}"
@@ -162,23 +166,23 @@ if(PERIPHERALOS_BUILD_CLI)
             PERIPHERALOS_ENABLE_PROFILES=$<BOOL:${PERIPHERALOS_ENABLE_PROFILES}>
     )
 
-    if(WIN32)
+    if (WIN32)
         target_compile_definitions(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 PERIPHERALOS_PLATFORM_WINDOWS=1
         )
-    elseif(APPLE)
+    elseif (APPLE)
         target_compile_definitions(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 PERIPHERALOS_PLATFORM_MACOS=1
         )
-    elseif(UNIX)
+    elseif (UNIX)
         target_compile_definitions(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 PERIPHERALOS_PLATFORM_LINUX=1
         )
-    endif()
-endif()
+    endif ()
+endif ()
 
 # ============================================================
 # Dependencies
@@ -188,63 +192,63 @@ include(FetchContent)
 
 # JSON config/profile support
 FetchContent_Declare(
-    nlohmann_json
-    URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+        nlohmann_json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
 )
 
 # Formatting, CLI output, logs
 FetchContent_Declare(
-    fmt
-    URL https://github.com/fmtlib/fmt/releases/download/10.2.1/fmt-10.2.1.zip
+        fmt
+        URL https://github.com/fmtlib/fmt/releases/download/10.2.1/fmt-10.2.1.zip
 )
 
 FetchContent_MakeAvailable(nlohmann_json fmt)
 
-if(PERIPHERALOS_BUILD_CLI)
+if (PERIPHERALOS_BUILD_CLI)
     target_link_libraries(${PERIPHERALOS_EXECUTABLE_NAME}
-        PRIVATE
+            PRIVATE
             nlohmann_json::nlohmann_json
             fmt::fmt
     )
-endif()
+endif ()
 
 # ============================================================
 # Platform Libraries
 # ============================================================
 
-if(PERIPHERALOS_BUILD_CLI)
-    if(WIN32)
+if (PERIPHERALOS_BUILD_CLI)
+    if (WIN32)
         target_link_libraries(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 setupapi
                 hid
                 user32
         )
-    elseif(APPLE)
+    elseif (APPLE)
         find_library(IOKIT_FRAMEWORK IOKit REQUIRED)
         find_library(COREFOUNDATION_FRAMEWORK CoreFoundation REQUIRED)
 
         target_link_libraries(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 ${IOKIT_FRAMEWORK}
                 ${COREFOUNDATION_FRAMEWORK}
         )
-    elseif(UNIX)
+    elseif (UNIX)
         find_package(PkgConfig REQUIRED)
 
         pkg_check_modules(UDEV REQUIRED libudev)
 
         target_include_directories(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 ${UDEV_INCLUDE_DIRS}
         )
 
         target_link_libraries(${PERIPHERALOS_EXECUTABLE_NAME}
-            PRIVATE
+                PRIVATE
                 ${UDEV_LIBRARIES}
         )
-    endif()
-endif()
+    endif ()
+endif ()
 
 # ============================================================
 # Install
@@ -252,40 +256,40 @@ endif()
 
 include(GNUInstallDirs)
 
-if(PERIPHERALOS_BUILD_CLI)
+if (PERIPHERALOS_BUILD_CLI)
     install(
-        TARGETS ${PERIPHERALOS_EXECUTABLE_NAME}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            TARGETS ${PERIPHERALOS_EXECUTABLE_NAME}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
-endif()
+endif ()
 
 # ============================================================
 # Tests
 # ============================================================
 
-if(PERIPHERALOS_BUILD_TESTS)
+if (PERIPHERALOS_BUILD_TESTS)
     enable_testing()
 
     FetchContent_Declare(
-        doctest
-        URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.zip
+            doctest
+            URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.zip
     )
 
     FetchContent_MakeAvailable(doctest)
 
     add_executable(peripheralos-tests
-        tests/main.test.cpp
+            tests/main.test.cpp
     )
 
     target_compile_features(peripheralos-tests PRIVATE cxx_std_20)
 
     target_link_libraries(peripheralos-tests
-        PRIVATE
+            PRIVATE
             doctest::doctest
     )
 
     add_test(NAME peripheralos-tests COMMAND peripheralos-tests)
-endif()
+endif ()
 
 # ============================================================
 # Summary
