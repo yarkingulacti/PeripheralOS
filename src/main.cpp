@@ -107,45 +107,6 @@ namespace
 
                 if (!batteryResponse.empty())
                 {
-                    for (std::uint8_t functionId = 0x01; functionId <= 0x03; ++functionId)
-                    {
-                        const auto response =
-                            hidpp.debugRequest(
-                                *unifiedBatteryFeatureIndex,
-                                functionId,
-                                {0x00, 0x00, 0x00}
-                            );
-
-                        if (!response.empty())
-                        {
-                            fmt::print(
-                                "  -> UNIFIED_BATTERY function 0x{:02X} RAW:",
-                                functionId
-                            );
-
-                            for (const auto byte : response)
-                            {
-                                fmt::print(" {:02X}", byte);
-                            }
-
-                            fmt::print("\n");
-                        }
-                        else
-                        {
-                            fmt::print(
-                                "  -> UNIFIED_BATTERY function 0x{:02X} failed\n",
-                                functionId
-                            );
-                        }
-                    }
-
-                    for (const auto byte : batteryResponse)
-                    {
-                        fmt::print(" {:02X}", byte);
-                    }
-
-                    fmt::print("\n");
-
                     const auto parsedBattery =
                         peripheralos::logitech::parseUnifiedBatteryResponse(
                             batteryResponse
@@ -153,13 +114,6 @@ namespace
 
                     if (parsedBattery.has_value())
                     {
-                        fmt::print(
-                            "  -> Parsed Battery: {}%, secondaryLevel={}, statusByte={}\n",
-                            parsedBattery->percentage,
-                            parsedBattery->secondaryLevel,
-                            parsedBattery->statusByte
-                        );
-
                         const auto batteryInfo = hidpp.getBatteryInfo();
 
                         if (batteryInfo.has_value())
@@ -194,17 +148,6 @@ namespace
             else
             {
                 fmt::print("  -> HID++ DEVICE_NAME feature discovery failed\n");
-            }
-
-            const auto hidppNameLength = hidpp.getDeviceNameLength();
-
-            if (hidppNameLength.has_value())
-            {
-                fmt::print("  -> HID++ device name length: {}\n", *hidppNameLength);
-            }
-            else
-            {
-                fmt::print("  -> HID++ device name length read failed\n");
             }
 
             const auto hidppName = hidpp.getDeviceName();
