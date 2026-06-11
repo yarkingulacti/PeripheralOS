@@ -19,7 +19,6 @@ build.ninja
 
 # IDE
 .idea/
-.vscode/
 
 # CLion
 cmake-build-debug/
@@ -59,3 +58,7 @@ dist/
 !src/**
 !include/**
 !tests/**
+
+# Development scripts
+
+scripts/

@@ -87,26 +87,19 @@ namespace
 
             peripheralos::logitech::Hidpp20Client hidpp(hidDevice);
 
-            const auto deviceNameFeatureIndex = hidpp.getFeatureIndex(0x0005);
+            const auto batteryInfo = hidpp.getBatteryInfo();
 
-            if (deviceNameFeatureIndex.has_value())
+            if (batteryInfo.has_value())
             {
-                fmt::print("  -> HID++ DEVICE_NAME feature index: {}\n", *deviceNameFeatureIndex);
+                fmt::print(
+                    "  -> Battery: {}% ({})\n",
+                    batteryInfo->percentage,
+                    peripheralos::toString(batteryInfo->status)
+                );
             }
             else
             {
-                fmt::print("  -> HID++ DEVICE_NAME feature discovery failed\n");
-            }
-
-            const auto hidppNameLength = hidpp.getDeviceNameLength();
-
-            if (hidppNameLength.has_value())
-            {
-                fmt::print("  -> HID++ device name length: {}\n", *hidppNameLength);
-            }
-            else
-            {
-                fmt::print("  -> HID++ device name length read failed\n");
+                fmt::print("  -> Battery info read failed\n");
             }
 
             const auto hidppName = hidpp.getDeviceName();
@@ -129,7 +122,7 @@ namespace
     void runUnsupportedPlatformNotice()
     {
         fmt::print("PeripheralOS CLI built successfully for this platform.\n\n");
-        fmt::print("Current v0.1.0-alpha runtime support:\n");
+        fmt::print("Current v0.2.0-alpha runtime support:\n");
         fmt::print("  Linux HID discovery       : available\n");
         fmt::print("  Logitech HID++ prototype  : available on Linux\n");
         fmt::print("  Windows backend           : planned\n");

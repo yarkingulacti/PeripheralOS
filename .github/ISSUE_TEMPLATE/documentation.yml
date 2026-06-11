@@ -1,0 +1,23 @@
+name: Documentation Improvement
+description: Report documentation issues
+title: "[Docs]: "
+labels:
+
+* type:docs
+
+body:
+
+* type: input
+  id: file
+  attributes:
+  label: Affected File
+
+* type: textarea
+  id: problem
+  attributes:
+  label: Problem
+
+* type: textarea
+  id: improvement
+  attributes:
+  label: Suggested Improvement

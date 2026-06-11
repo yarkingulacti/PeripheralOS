@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 project(
         PeripheralOS
-        VERSION 0.1.0
+        VERSION 0.2.0
         DESCRIPTION "Cross-platform peripheral management platform"
         HOMEPAGE_URL "https://github.com/yarkingulacti/peripheralos"
         LANGUAGES CXX
@@ -65,6 +65,7 @@ endif ()
 set(PERIPHERALOS_SOURCES
         src/main.cpp
         src/devices/DeviceIdentity.cpp
+        src/hidpp/UnifiedBatteryReader.cpp
         src/logitech/Hidpp20Client.cpp
 )
 
@@ -242,16 +243,23 @@ if (PERIPHERALOS_BUILD_TESTS)
 
     FetchContent_Declare(
             doctest
-            URL https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.zip
+            URL https://github.com/doctest/doctest/archive/refs/tags/v2.5.2.zip
     )
 
     FetchContent_MakeAvailable(doctest)
 
     add_executable(peripheralos-tests
             tests/main.test.cpp
+            tests/UnifiedBatteryReader.test.cpp
+            src/hidpp/UnifiedBatteryReader.cpp
     )
 
     target_compile_features(peripheralos-tests PRIVATE cxx_std_20)
+
+    target_include_directories(peripheralos-tests
+            PRIVATE
+            "${PROJECT_SOURCE_DIR}/include"
+    )
 
     target_link_libraries(peripheralos-tests
             PRIVATE
