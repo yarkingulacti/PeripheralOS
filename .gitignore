@@ -59,6 +59,12 @@ dist/
 !include/**
 !tests/**
 
-# Development scripts
-
 scripts/
+.scannerwork/
+
+.env
+.env.*
+!.env.example
+
+.vscode/
+.cursor/
